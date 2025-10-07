@@ -19,6 +19,9 @@ import kotlinx.cinterop.toKStringFromUtf8
 import kotlinx.cinterop.usePinned
 import kotlinx.cinterop.wcstr
 
+val JNINativeInterface.common
+    get() = CommonJNINativeInterface(this)
+
 @OptIn(ExperimentalForeignApi::class)
 fun CPointer<JNIEnvVar>.newString(chars: CPointer<jcharVar>, length: Int): jstring? {
     val method = pointed.pointedCommon?.NewString ?: return null

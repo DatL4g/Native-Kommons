@@ -141,7 +141,6 @@ kotlin {
 
         commonTest.dependencies {
             implementation(libs.bundles.kotest)
-            implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.8.0")
         }
 
         val desktopMain by creating {

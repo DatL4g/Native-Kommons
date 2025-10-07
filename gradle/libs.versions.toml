@@ -4,6 +4,7 @@ kotlin = "2.2.20"
 osdetector = "1.7.3"
 vanniktechMavenPublish = "0.34.0"
 kotest = "6.0.3"
+kotlinpoet = "2.2.0"
 ksp = "2.2.20-2.0.3"
 okio = "3.16.0"
 
@@ -11,6 +12,9 @@ okio = "3.16.0"
 kotest = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
 kotest-framework = { group = "io.kotest", name = "kotest-framework-engine", version.ref = "kotest" }
 kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }
+kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
+kotlinpoet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref = "kotlinpoet" }
+ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 
 [bundles]

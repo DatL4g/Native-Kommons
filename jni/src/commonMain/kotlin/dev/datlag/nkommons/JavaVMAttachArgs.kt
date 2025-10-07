@@ -12,4 +12,6 @@ expect class JavaVMAttachArgs : CStructVar {
     var version: jint
     var name: CPointer<ByteVar>?
 
+    @Deprecated("Deprecated in actual type")
+    companion object : CStructVar.Type
 }

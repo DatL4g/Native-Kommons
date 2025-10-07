@@ -1,11 +1,12 @@
 package dev.datlag.nkommons.binding
 
-import kotlinx.cinterop.COpaquePointer
+import kotlinx.cinterop.CPointed
+import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.CPointerVarOf
 import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
-typealias jobject = COpaquePointer
+typealias jobject = CPointer<out CPointed>
 
 @OptIn(ExperimentalForeignApi::class)
 typealias jobjectVar = CPointerVarOf<jobject>
@@ -33,3 +34,21 @@ typealias jweak = jobject
 
 @OptIn(ExperimentalForeignApi::class)
 typealias jweakVar = CPointerVarOf<jweak>
+
+@OptIn(ExperimentalForeignApi::class)
+typealias jclass = jobject
+
+@OptIn(ExperimentalForeignApi::class)
+typealias jclassVar = CPointerVarOf<jclass>
+
+@OptIn(ExperimentalForeignApi::class)
+typealias jfieldID = CPointer<out CPointed>
+
+@OptIn(ExperimentalForeignApi::class)
+typealias jfieldIDVar = CPointerVarOf<jfieldID>
+
+@OptIn(ExperimentalForeignApi::class)
+typealias jmethodID = CPointer<out CPointed>
+
+@OptIn(ExperimentalForeignApi::class)
+typealias jmethodIDVar = CPointerVarOf<jmethodID>

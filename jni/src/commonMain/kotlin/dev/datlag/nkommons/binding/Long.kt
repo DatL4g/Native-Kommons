@@ -8,3 +8,6 @@ typealias jlong = int64_t
 
 @OptIn(ExperimentalForeignApi::class)
 typealias jlongVar = LongVarOf<jlong>
+
+@OptIn(ExperimentalForeignApi::class)
+typealias jlongArray = jarray

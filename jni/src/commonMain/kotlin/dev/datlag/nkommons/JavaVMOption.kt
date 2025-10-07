@@ -12,4 +12,6 @@ expect class JavaVMOption : CStructVar {
     var extraInfo: COpaquePointer?
     var optionString: CPointer<ByteVar>?
 
+    @Deprecated("Deprecated in actual type")
+    companion object : CStructVar.Type
 }

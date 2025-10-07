@@ -12,15 +12,6 @@ import kotlinx.cinterop.pointed
 import kotlinx.cinterop.usePinned
 
 @OptIn(markerClass = [ExperimentalForeignApi::class])
-actual fun CPointer<JNIEnvVar>.newString(
-    chars: CPointer<jcharVar>,
-    length: Int
-): jstring? {
-    val method = pointed.pointed?.NewString ?: return null
-    return method.invoke(this, chars, length)
-}
-
-@OptIn(markerClass = [ExperimentalForeignApi::class])
 actual fun jstring.getStringUTFChars(env: CPointer<JNIEnvVar>): CPointer<ByteVar>? {
     val method = env.pointed.pointed?.GetStringUTFChars ?: return null
     return method.invoke(env, this, null)

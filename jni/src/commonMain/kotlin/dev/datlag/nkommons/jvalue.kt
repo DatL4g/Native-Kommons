@@ -23,4 +23,6 @@ expect class jvalue : CStructVar {
     var z: jboolean
     var i: jint
 
+    @Deprecated("Deprecated in actual type")
+    companion object : CStructVar.Type
 }

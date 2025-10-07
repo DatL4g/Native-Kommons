@@ -11,4 +11,7 @@ expect class JNINativeMethod : CStructVar {
     var fnPtr: COpaquePointer?
     var signature: CPointer<ByteVar>?
     var name: CPointer<ByteVar>?
+
+    @Deprecated("Deprecated in actual type")
+    companion object : CStructVar.Type
 }

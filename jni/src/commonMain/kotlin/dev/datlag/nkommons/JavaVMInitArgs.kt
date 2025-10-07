@@ -14,4 +14,6 @@ expect class JavaVMInitArgs : CStructVar {
     var options: CPointer<JavaVMOption>?
     var ignoreUnrecognized: jboolean
 
+    @Deprecated("Deprecated in actual type")
+    companion object : CStructVar.Type
 }

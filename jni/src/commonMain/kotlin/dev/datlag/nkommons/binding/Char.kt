@@ -11,11 +11,3 @@ typealias jcharVar = UShortVarOf<jchar>
 
 @OptIn(ExperimentalForeignApi::class)
 typealias jcharArray = jarray
-
-fun jchar.toKChar(): Char {
-    return Char(this)
-}
-
-fun Char.toJChar(): jchar {
-    return this.code.toUShort()
-}

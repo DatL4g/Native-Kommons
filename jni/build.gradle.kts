@@ -5,27 +5,84 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-group = "io.github.kotlin"
+group = "dev.datlag.nkommons"
 version = "1.0.0"
 
 kotlin {
-    androidNativeX86()
-    androidNativeX64()
-    androidNativeArm32()
-    androidNativeArm64()
+    androidNativeX86 {
+        binaries {
+            sharedLib()
+            staticLib()
+        }
+    }
+    androidNativeX64 {
+        binaries {
+            sharedLib {
+                linkerOpts += listOf(
+                    "-Wl,-z,max-page-size=16384",
+                    "-Wl,-z,common-page-size=16384",
+                    "-v"
+                )
+            }
+            staticLib {
+                linkerOpts += listOf(
+                    "-Wl,-z,max-page-size=16384",
+                    "-Wl,-z,common-page-size=16384",
+                    "-v"
+                )
+            }
+        }
+    }
+    androidNativeArm32 {
+        binaries {
+            sharedLib()
+            staticLib()
+        }
+    }
+    androidNativeArm64 {
+        binaries {
+            sharedLib()
+            staticLib()
+        }
+    }
 
     val desktopTargets = mutableListOf(
-        linuxX64(),
-        linuxArm64(),
-        mingwX64()
+        linuxX64 {
+            binaries {
+                sharedLib()
+                staticLib()
+            }
+        },
+        linuxArm64 {
+            binaries {
+                sharedLib()
+                staticLib()
+            }
+        },
+        mingwX64 {
+            binaries {
+                sharedLib()
+                staticLib()
+            }
+        }
     )
 
     if (getHost() == Host.MAC) {
         desktopTargets.add(
-            macosX64()
+            macosX64 {
+                binaries {
+                    sharedLib()
+                    staticLib()
+                }
+            }
         )
         desktopTargets.add(
-            macosArm64()
+            macosArm64 {
+                binaries {
+                    sharedLib()
+                    staticLib()
+                }
+            }
         )
     }
 

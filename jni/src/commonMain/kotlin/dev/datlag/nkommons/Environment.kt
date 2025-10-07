@@ -18,3 +18,6 @@ typealias C_JNIEnvVar = CPointerVarOf<C_JNIEnv>
 
 @OptIn(ExperimentalForeignApi::class)
 typealias JavaVM = CPointer<JNIInvokeInterface>
+
+@OptIn(ExperimentalForeignApi::class)
+typealias JavaVMVar = CPointerVarOf<JavaVM>

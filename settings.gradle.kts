@@ -1,3 +1,8 @@
+rootProject.name = "Native-Kommons"
+
+include(":jni")
+include(":demo")
+
 pluginManagement {
     repositories {
         google()
@@ -12,6 +17,3 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-
-rootProject.name = "Native-Kommons"
-include(":jni")

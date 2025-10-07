@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.multiplatform)
     alias(libs.plugins.osdetector)
     alias(libs.plugins.kotest)
     alias(libs.plugins.ksp)

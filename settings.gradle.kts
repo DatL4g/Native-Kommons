@@ -1,5 +1,6 @@
 rootProject.name = "Native-Kommons"
 
+include(":annotations")
 include(":jni")
 include(":demo")
 

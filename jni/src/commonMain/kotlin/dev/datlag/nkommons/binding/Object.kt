@@ -24,6 +24,9 @@ typealias jobjectArrayVar = CPointerVarOf<jobjectArray>
 typealias jthrowable = jobject
 
 @OptIn(ExperimentalForeignApi::class)
+typealias jthrowableVar = CPointerVarOf<jthrowable>
+
+@OptIn(ExperimentalForeignApi::class)
 typealias jstring = jobject
 
 @OptIn(ExperimentalForeignApi::class)

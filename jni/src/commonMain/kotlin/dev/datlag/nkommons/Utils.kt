@@ -33,10 +33,6 @@ expect fun CPointer<JNIEnvVar>.newIntArray(size: Int): jintArray?
 expect fun CPointer<JNIEnvVar>.fill(target: jintArray, value: IntArray): jintArray?
 
 @OptIn(ExperimentalForeignApi::class)
-val JNIEnvVar.pointedCommon: CommonJNINativeInterface?
-    get() = pointed?.let(CommonJNINativeInterface::invoke)
-
-@OptIn(ExperimentalForeignApi::class)
 fun CPointer<JNIEnvVar>.newString(chars: CPointer<jcharVar>, length: Int): jstring? {
     val method = pointed.pointedCommon?.NewString ?: return null
     return method.invoke(this, chars, length)

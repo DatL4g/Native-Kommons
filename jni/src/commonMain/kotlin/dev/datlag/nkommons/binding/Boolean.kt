@@ -12,6 +12,9 @@ typealias jboolean = uint8_t
 typealias jbooleanVar = UByteVarOf<jboolean>
 
 @OptIn(ExperimentalForeignApi::class)
+typealias jbooleanArray = jarray
+
+@OptIn(ExperimentalForeignApi::class)
 fun jboolean.toKBoolean(): Boolean {
     return this.toByte().toBoolean()
 }

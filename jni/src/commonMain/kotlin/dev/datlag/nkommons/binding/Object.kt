@@ -55,3 +55,5 @@ typealias jmethodID = CPointer<out CPointed>
 
 @OptIn(ExperimentalForeignApi::class)
 typealias jmethodIDVar = CPointerVarOf<jmethodID>
+
+typealias jobjectRefType = UInt

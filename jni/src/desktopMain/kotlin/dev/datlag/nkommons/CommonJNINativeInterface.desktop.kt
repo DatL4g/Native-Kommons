@@ -124,6 +124,42 @@ actual class CommonJNINativeInterface(
             platform.NewCharArray = value as CPointer<CFunction<(CPointer<JNIEnvVar>?, jsize) -> jni.jcharArray?>>?
         }
 
+    actual var CallFloatMethod: COpaquePointer?
+        get() = platform.CallFloatMethod
+        set(value) {
+            platform.CallFloatMethod = value
+        }
+
+    actual var EnsureLocalCapacity: CPointer<CFunction<(CPointer<JNIEnvVar>?, jint) -> jint>>?
+        get() = platform.EnsureLocalCapacity
+        set(value) {
+            platform.EnsureLocalCapacity = value
+        }
+
+    actual var CallNonvirtualObjectMethodA: CPointer<CFunction<(CPointer<JNIEnvVar>?, jobject?, jclass?, jmethodID?, CPointer<jvalue>?) -> jobject?>>?
+        get() = platform.CallNonvirtualObjectMethodA as CPointer<CFunction<(CPointer<JNIEnvVar>?, jobject?, jclass?, jmethodID?, CPointer<jvalue>?) -> jobject?>>?
+        set(value) {
+            platform.CallNonvirtualObjectMethodA = value as CPointer<CFunction<(CPointer<JNIEnvVar>?, jni.jobject?, jni.jclass?, jni.jmethodID?, CPointer<jvalue>?) -> jni.jobject?>>?
+        }
+
+    actual var AllocObject: CPointer<CFunction<(CPointer<JNIEnvVar>?, jclass?) -> jobject?>>?
+        get() = platform.AllocObject as CPointer<CFunction<(CPointer<JNIEnvVar>?, jclass?) -> jobject?>>?
+        set(value) {
+            platform.AllocObject = value as CPointer<CFunction<(CPointer<JNIEnvVar>?, jni.jclass?) -> jni.jobject?>>?
+        }
+
+    actual var ExceptionOccurred: CPointer<CFunction<(CPointer<JNIEnvVar>?) -> jthrowable?>>?
+        get() = platform.ExceptionOccurred as CPointer<CFunction<(CPointer<JNIEnvVar>?) -> jthrowable?>>?
+        set(value) {
+            platform.ExceptionOccurred = value as CPointer<CFunction<(CPointer<JNIEnvVar>?) -> jni.jthrowable?>>?
+        }
+
+    actual var GetObjectField: CPointer<CFunction<(CPointer<JNIEnvVar>?, jobject?, jfieldID?) -> jobject?>>?
+        get() = platform.GetObjectField as CPointer<CFunction<(CPointer<JNIEnvVar>?, jobject?, jfieldID?) -> jobject?>>?
+        set(value) {
+            platform.GetObjectField = value as CPointer<CFunction<(CPointer<JNIEnvVar>?, jni.jobject?, jni.jfieldID?) -> jni.jobject?>>?
+        }
+
     actual var NewString: CPointer<CFunction<(CPointer<dev.datlag.nkommons.JNIEnvVar>?, CPointer<jcharVar>?, jsize) -> jstring?>>?
         get() = platform.NewString as CPointer<CFunction<(CPointer<JNIEnvVar>?, CPointer<jcharVar>?, jsize) -> jstring?>>?
         set(value) {

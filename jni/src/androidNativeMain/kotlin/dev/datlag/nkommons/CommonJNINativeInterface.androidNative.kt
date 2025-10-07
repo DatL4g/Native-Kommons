@@ -123,6 +123,41 @@ actual class CommonJNINativeInterface(
             platform.NewCharArray = value
         }
 
+    actual var CallFloatMethod: COpaquePointer?
+        get() = platform.CallFloatMethod
+        set(value) {
+            platform.CallFloatMethod = value
+        }
+
+    actual var EnsureLocalCapacity: CPointer<CFunction<(CPointer<JNIEnvVar>?, jint) -> jint>>?
+        get() = platform.EnsureLocalCapacity
+        set(value) {
+            platform.EnsureLocalCapacity = value
+        }
+
+    actual var CallNonvirtualObjectMethodA: CPointer<CFunction<(CPointer<JNIEnvVar>?, jobject?, jclass?, jmethodID?, CPointer<jvalue>?) -> jobject?>>?
+        get() = platform.CallNonvirtualObjectMethodA as CPointer<CFunction<(CPointer<JNIEnvVar>?, jobject?, jclass?, jmethodID?, CPointer<jvalue>?) -> jobject?>>?
+        set(value) {
+            platform.CallNonvirtualObjectMethodA = value as CPointer<CFunction<(CPointer<JNIEnvVar>?, jobject?, jclass?, platform.android.jmethodID?, CPointer<jvalue>?) -> jobject?>>?
+        }
+
+    actual var AllocObject: CPointer<CFunction<(CPointer<JNIEnvVar>?, jclass?) -> jobject?>>?
+        get() = platform.AllocObject
+        set(value) {
+            platform.AllocObject = value
+        }
+
+    actual var ExceptionOccurred: CPointer<CFunction<(CPointer<JNIEnvVar>?) -> jthrowable?>>?
+        get() = platform.ExceptionOccurred
+        set(value) {
+            platform.ExceptionOccurred = value
+        }
+
+    actual var GetObjectField: CPointer<CFunction<(CPointer<JNIEnvVar>?, jobject?, jfieldID?) -> jobject?>>?
+        get() = platform.GetObjectField as CPointer<CFunction<(CPointer<JNIEnvVar>?, jobject?, jfieldID?) -> jobject?>>?
+        set(value) {
+            platform.GetObjectField = value as CPointer<CFunction<(CPointer<JNIEnvVar>?, jobject?, platform.android.jfieldID?) -> jobject?>>?
+        }
 
     actual var NewString: CPointer<CFunction<(CPointer<JNIEnvVar>?, CPointer<jcharVar>?, jsize) -> jstring?>>?
         get() = platform.NewString

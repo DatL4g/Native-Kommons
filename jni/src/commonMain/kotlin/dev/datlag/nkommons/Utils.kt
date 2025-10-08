@@ -29,7 +29,7 @@ fun CPointer<JNIEnvVar>.newString(chars: CPointer<jcharVar>, length: Int): jstri
 }
 
 @OptIn(ExperimentalForeignApi::class)
-fun String.toJstring(env: CPointer<JNIEnvVar>): jstring? = memScoped {
+fun String.toJString(env: CPointer<JNIEnvVar>): jstring? = memScoped {
     env.newString(wcstr.ptr, length)
 }
 
@@ -59,6 +59,11 @@ fun jintArray.fill(env: CPointer<JNIEnvVar>, value: IntArray): jintArray? {
         method.invoke(env, this, 0, value.size, pointer)
     }
     return this
+}
+
+@OptIn(ExperimentalForeignApi::class)
+fun IntArray.toJIntArray(env: CPointer<JNIEnvVar>): jintArray? {
+    return env.newIntArray(size)?.fill(env, this)
 }
 
 @OptIn(ExperimentalForeignApi::class)

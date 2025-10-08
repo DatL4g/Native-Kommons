@@ -1,6 +1,7 @@
 import dev.datlag.nkommons.JNIClassName
 import dev.datlag.nkommons.JNIConnect
 import dev.datlag.nkommons.JNIFunctionName
+import dev.datlag.nkommons.JNIPackageName
 
 @JNIConnect
 fun boolExample(): Boolean {
@@ -34,8 +35,10 @@ fun charExample(): Char {
 }
 
 @JNIConnect
+@JNIPackageName("dev.datlag.nkommons")
+@JNIClassName("MainKt")
 fun stringExample(): String {
-    return "Hello World!"
+    return "Hello Native!"
 }
 
 @JNIConnect
@@ -54,6 +57,8 @@ fun concat(a: String, b: String): String {
 }
 
 @JNIConnect
+@JNIPackageName("dev.datlag.nkommons")
+@JNIClassName("MainKt")
 fun mixed(a: String, b: Int, c: Boolean, d: IntArray, e: Char): String {
     return "$a, $b, $c, ${d.joinToString(separator = "|", prefix = "[", postfix = "]")}, $e"
 }

@@ -19,11 +19,5 @@ kotlin {
             implementation(libs.kotlinpoet)
             implementation(libs.kotlinpoet.ksp)
         }
-
-        jvmTest.dependencies {
-            implementation(libs.test.compile)
-            implementation(libs.test.ksp)
-            implementation(libs.mockito)
-        }
     }
 }

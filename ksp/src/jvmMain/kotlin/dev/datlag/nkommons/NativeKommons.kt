@@ -3,12 +3,20 @@ package dev.datlag.nkommons
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.processing.CodeGenerator
+import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.ksp.toTypeName
+import com.squareup.kotlinpoet.ksp.writeTo
+import dev.datlag.nkommons.TypeMatcher.typeOf
 
 class NativeKommons : SymbolProcessorProvider {
     var called: Boolean = false
@@ -35,26 +43,111 @@ class NativeKommons : SymbolProcessorProvider {
         private fun getAnnotatedFunctions(resolver: Resolver): List<KSFunctionDeclaration> {
             val jniConnectAnnotated = resolver.getSymbolsWithAnnotation(JNIConnect::class.java.name).toList()
 
-            return (jniConnectAnnotated).filterIsInstance<KSFunctionDeclaration>()
+            return (jniConnectAnnotated).filterIsInstance<KSFunctionDeclaration>().distinct()
         }
 
         @OptIn(KspExperimental::class)
         private fun generateJNIMethod(declaration: KSFunctionDeclaration) {
             val packageName = declaration.packageName.asString()
             val functionName = declaration.simpleName.asString()
+            val returnType = declaration.returnType?.toTypeName() ?: TypeMatcher.UnitOrVoid
+            val source = listOfNotNull(
+                declaration.containingFile,
+                declaration.parentDeclaration?.containingFile
+            )
 
-            val connectAnnotation = declaration.getAnnotationsByType(JNIConnect::class).singleOrNull()
-            val expectedPackageName = connectAnnotation?.packageName?.ifBlank { null } ?: packageName
-            val expectedClassName = connectAnnotation?.className?.ifBlank { null }
-            val expectedFunctionName = connectAnnotation?.functionName?.ifBlank { null } ?: functionName
+            val packageNameAnnotation = declaration.getAnnotationsByType(JNIPackageName::class).firstOrNull()
+            val classNameAnnotation = declaration.getAnnotationsByType(JNIClassName::class).firstOrNull()
+            val functionNameAnnotation = declaration.getAnnotationsByType(JNIFunctionName::class).firstOrNull()
+            val expectedPackageName = packageNameAnnotation?.packageName?.ifBlank { null } ?: packageName
+            val expectedClassName = classNameAnnotation?.className?.ifBlank { null }
+            val expectedFunctionName = functionNameAnnotation?.functionName?.ifBlank { null } ?: functionName
+            val expectedReturnType = TypeMatcher.jniTypeFor(returnType, forReturn = true)
+            val finalReturnType = expectedReturnType ?: returnType
 
             val jniCName = CNameUtils.jniFunctionCName(
                 packageName = expectedPackageName,
                 className = expectedClassName,
                 functionName = expectedFunctionName
             )
+
+            val params = declaration.parameters.mapIndexed { index, param ->
+                val name = param.name?.asString() ?: "p$index"
+                val typeName = param.type.toTypeName()
+                val expectedTypeName = TypeMatcher.jniTypeFor(typeName, forReturn = false) ?: typeName
+                val (code, subMember) = when {
+                    expectedTypeName typeOf TypeMatcher.JBoolean && typeName typeOf TypeMatcher.KBoolean -> {
+                        "$name.%M()" to TypeMatcher.Method.ToKBoolean
+                    }
+                    expectedTypeName typeOf TypeMatcher.JChar && typeName typeOf TypeMatcher.KChar -> {
+                        "$name.%M()" to TypeMatcher.Method.ToKChar
+                    }
+                    expectedTypeName typeOf TypeMatcher.JString && typeName typeOf TypeMatcher.KString -> {
+                        val nullCheck = if (finalReturnType.isNullable) {
+                            " ?: return null"
+                        } else {
+                            "!!"
+                        }
+                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKString
+                    }
+                    expectedTypeName typeOf TypeMatcher.JIntArray && typeName typeOf TypeMatcher.KIntArray -> {
+                        val nullCheck = if (finalReturnType.isNullable) {
+                            " ?: return null"
+                        } else {
+                            "!!"
+                        }
+                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKIntArray
+                    }
+                    else -> name to null
+                }
+
+                val spec = ParameterSpec.builder(name, expectedTypeName).build()
+
+                ParamInfo(code, subMember, spec)
+            }
+
+            val (code, subMember) = when {
+                expectedReturnType typeOf TypeMatcher.JBoolean && returnType typeOf TypeMatcher.KBoolean -> {
+                    "return %M(${params.joinToString { it.code }}).%M()" to TypeMatcher.Method.ToJBoolean
+                }
+                expectedReturnType typeOf TypeMatcher.JChar && returnType typeOf TypeMatcher.KChar -> {
+                    "return %M(${params.joinToString { it.code }}).%M()" to TypeMatcher.Method.ToJChar
+                }
+                expectedReturnType typeOf TypeMatcher.JString && returnType typeOf TypeMatcher.KString -> {
+                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJString
+                }
+                expectedReturnType typeOf TypeMatcher.JIntArray && returnType typeOf TypeMatcher.KIntArray -> {
+                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJIntArray
+                }
+                else -> "return %M(${params.joinToString { it.code }})" to null
+            }
+
+            val method = FunSpec.builder("_${functionName}JNI")
+                .addAnnotation(CNameUtils.NativeOptIn)
+                .addAnnotation(CNameUtils.cnameFor(jniCName))
+                .addParameter("env", TypeMatcher.Environment)
+                .addParameter("clazz", TypeMatcher.JObject)
+                .addParameters(params.map { it.spec })
+                .returns(finalReturnType)
+                .apply {
+                    val originalMethod = MemberName(packageName, functionName)
+                    val memberCalls = listOfNotNull(*params.mapNotNull { it.member }.toTypedArray(), subMember)
+
+                    addComment("FORCING BODY")
+                    addStatement(code, originalMethod, *memberCalls.toTypedArray())
+                }
+                .build()
+
+            FileSpec.builder(packageName, "_${functionName}JNI")
+                .addFunction(method)
+                .build()
+                .writeTo(codeGenerator, Dependencies(false, *source.toTypedArray()))
         }
 
-
+        data class ParamInfo(
+            val code: String,
+            val member: MemberName?,
+            val spec: ParameterSpec
+        )
     }
 }

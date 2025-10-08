@@ -1,9 +1,20 @@
 package dev.datlag.nkommons
 
+import com.squareup.kotlinpoet.AnnotationSpec
+import com.squareup.kotlinpoet.ClassName
+
 internal object CNameUtils {
 
     private const val JNI_PREFIX = "Java"
     private const val JNI_SEPARATOR = '_'
+
+    val CName = ClassName("kotlin.native", "CName")
+    private val ExperimentalForeignApi = ClassName("kotlinx.cinterop", "ExperimentalForeignApi")
+    private val ExperimentalNativeApi = ClassName("kotlin.experimental", "ExperimentalNativeApi")
+    private val OptIn = ClassName("kotlin", "OptIn")
+    val NativeOptIn = AnnotationSpec.builder(OptIn)
+        .addMember("%T::class, %T::class", ExperimentalForeignApi, ExperimentalNativeApi)
+        .build()
 
     internal fun jniFunctionCName(
         packageName: String,
@@ -54,5 +65,9 @@ internal object CNameUtils {
             }
         }
     }
+
+    internal fun cnameFor(externName: String) = AnnotationSpec.builder(CName)
+        .addMember("%S", externName)
+        .build()
 
 }

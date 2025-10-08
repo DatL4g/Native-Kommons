@@ -136,7 +136,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            //put your multiplatform dependencies here
+            api(project(":annotations"))
         }
 
         commonTest.dependencies {

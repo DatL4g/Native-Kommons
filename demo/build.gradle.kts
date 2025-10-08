@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.osdetector)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -52,6 +53,10 @@ kotlin {
             implementation(project(":jni"))
         }
     }
+}
+
+dependencies {
+    ksp(project(":ksp"))
 }
 
 fun getHost(): Host {

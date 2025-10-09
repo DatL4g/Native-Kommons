@@ -51,6 +51,7 @@ kotlin {
     sourceSets {
         nativeMain.dependencies {
             implementation(project(":jni"))
+            implementation(project(":annotations"))
         }
     }
 }

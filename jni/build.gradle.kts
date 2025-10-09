@@ -135,10 +135,6 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
     sourceSets {
-        commonMain.dependencies {
-            api(project(":annotations"))
-        }
-
         commonTest.dependencies {
             implementation(libs.bundles.kotest)
         }

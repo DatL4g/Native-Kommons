@@ -72,7 +72,7 @@ class NativeKommons : SymbolProcessorProvider {
             )
 
             val params = declaration.parameters.mapIndexed { index, param ->
-                val name = param.name?.asString() ?: "p$index"
+                val name = "p$index"
                 val typeName = param.type.toTypeName()
                 val expectedTypeName = TypeMatcher.jniTypeFor(typeName, forReturn = false) ?: typeName
                 val nullCheck = if (finalReturnType.isNullable) {

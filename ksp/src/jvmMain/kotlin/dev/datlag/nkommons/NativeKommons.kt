@@ -75,28 +75,44 @@ class NativeKommons : SymbolProcessorProvider {
                 val name = param.name?.asString() ?: "p$index"
                 val typeName = param.type.toTypeName()
                 val expectedTypeName = TypeMatcher.jniTypeFor(typeName, forReturn = false) ?: typeName
+                val nullCheck = if (finalReturnType.isNullable) {
+                    " ?: return null"
+                } else {
+                    "!!"
+                }
                 val (code, subMember) = when {
                     expectedTypeName typeOf TypeMatcher.JBoolean && typeName typeOf TypeMatcher.KBoolean -> {
                         "$name.%M()" to TypeMatcher.Method.ToKBoolean
                     }
+                    expectedTypeName typeOf TypeMatcher.JBooleanArray && typeName typeOf TypeMatcher.KBooleanArray -> {
+                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKBooleanArray
+                    }
+                    expectedTypeName typeOf TypeMatcher.JByteArray && typeName typeOf TypeMatcher.KByteArray -> {
+                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKByteArray
+                    }
                     expectedTypeName typeOf TypeMatcher.JChar && typeName typeOf TypeMatcher.KChar -> {
                         "$name.%M()" to TypeMatcher.Method.ToKChar
                     }
-                    expectedTypeName typeOf TypeMatcher.JString && typeName typeOf TypeMatcher.KString -> {
-                        val nullCheck = if (finalReturnType.isNullable) {
-                            " ?: return null"
-                        } else {
-                            "!!"
-                        }
-                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKString
+                    expectedTypeName typeOf TypeMatcher.JCharArray && typeName typeOf TypeMatcher.KCharArray -> {
+                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKCharArray
+                    }
+                    expectedTypeName typeOf TypeMatcher.JDoubleArray && typeName typeOf TypeMatcher.KDoubleArray -> {
+                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKDoubleArray
+                    }
+                    expectedTypeName typeOf TypeMatcher.JFloatArray && typeName typeOf TypeMatcher.KFloatArray -> {
+                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKFloatArray
                     }
                     expectedTypeName typeOf TypeMatcher.JIntArray && typeName typeOf TypeMatcher.KIntArray -> {
-                        val nullCheck = if (finalReturnType.isNullable) {
-                            " ?: return null"
-                        } else {
-                            "!!"
-                        }
                         "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKIntArray
+                    }
+                    expectedTypeName typeOf TypeMatcher.JLongArray && typeName typeOf TypeMatcher.KLongArray -> {
+                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKLongArray
+                    }
+                    expectedTypeName typeOf TypeMatcher.JShortArray && typeName typeOf TypeMatcher.KShortArray -> {
+                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKShortArray
+                    }
+                    expectedTypeName typeOf TypeMatcher.JString && typeName typeOf TypeMatcher.KString -> {
+                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKString
                     }
                     else -> name to null
                 }
@@ -110,14 +126,35 @@ class NativeKommons : SymbolProcessorProvider {
                 expectedReturnType typeOf TypeMatcher.JBoolean && returnType typeOf TypeMatcher.KBoolean -> {
                     "return %M(${params.joinToString { it.code }}).%M()" to TypeMatcher.Method.ToJBoolean
                 }
+                expectedReturnType typeOf TypeMatcher.JBooleanArray && returnType typeOf TypeMatcher.KBooleanArray -> {
+                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJBooleanArray
+                }
+                expectedReturnType typeOf TypeMatcher.JByteArray && returnType typeOf TypeMatcher.KByteArray -> {
+                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJByteArray
+                }
                 expectedReturnType typeOf TypeMatcher.JChar && returnType typeOf TypeMatcher.KChar -> {
                     "return %M(${params.joinToString { it.code }}).%M()" to TypeMatcher.Method.ToJChar
                 }
-                expectedReturnType typeOf TypeMatcher.JString && returnType typeOf TypeMatcher.KString -> {
-                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJString
+                expectedReturnType typeOf TypeMatcher.JCharArray && returnType typeOf TypeMatcher.KCharArray -> {
+                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJCharArray
+                }
+                expectedReturnType typeOf TypeMatcher.JDoubleArray && returnType typeOf TypeMatcher.KDoubleArray -> {
+                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJDoubleArray
+                }
+                expectedReturnType typeOf TypeMatcher.JFloatArray && returnType typeOf TypeMatcher.KFloatArray -> {
+                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJFloatArray
                 }
                 expectedReturnType typeOf TypeMatcher.JIntArray && returnType typeOf TypeMatcher.KIntArray -> {
                     "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJIntArray
+                }
+                expectedReturnType typeOf TypeMatcher.JLongArray && returnType typeOf TypeMatcher.KLongArray -> {
+                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJLongArray
+                }
+                expectedReturnType typeOf TypeMatcher.JShortArray && returnType typeOf TypeMatcher.KShortArray -> {
+                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJShortArray
+                }
+                expectedReturnType typeOf TypeMatcher.JString && returnType typeOf TypeMatcher.KString -> {
+                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJString
                 }
                 else -> "return %M(${params.joinToString { it.code }})" to null
             }

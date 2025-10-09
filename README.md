@@ -1,4 +1,4 @@
-# Native-Kommons ネイティブ・コモンズ
+# Native-Kommons ネイティフ・コモンズ
 
 Native-Kommons is a powerful Kotlin Multiplatform library designed to simplify and unify JNI (Java Native Interface) development across Android, Desktop (Linux, macOS, Windows), and Kotlin/Native.  
 
@@ -85,7 +85,7 @@ dependencies {
 
 ## Usage
 
-Native-Kommons offers two main features that can be used together or independently: JNI Utilities and the @JNIConnect Annotation Processor.
+Native-Kommons offers two main features that can be used together or independently: JNI Utilities and the `@JNIConnect` Annotation Processor.
 
 ### JNI Utilities
 
@@ -111,11 +111,11 @@ fun printMessage(env: CPointer<JNIEnvVar>, clazz: jobject, message: jstring) {
 
 ### KSP Auto-Generating JNI Stubs with `@JNIConnect`
 
-The @JNIConnect annotation is the core of the KSP module. It generates the necessary JNI boilerplate so you can write clean, idiomatic Kotlin code.
+The `@JNIConnect` annotation is the core of the KSP module. It generates the necessary JNI boilerplate so you can write clean, idiomatic Kotlin code.
 
 #### 1. Write Your Kotlin/Native Function
 
-Write your function using standard Kotlin types and annotate it with @JNIConnect.
+Write your function using standard Kotlin types and annotate it with `@JNIConnect`.
 
 ```kotlin
 import dev.datlag.nkommons.JNIConnect
@@ -133,8 +133,8 @@ fun example(a: String, b: Boolean, c: CharArray, d: Double): String {
 ```
 
 > [!WARNING]
-> The provided `@JNIPackageName`, `@JNIClassName` and `@JNIFunctionName` annotations will be removed.
-> Their parameters will be merged into `@JNIConnect`.
+> The provided `@JNIPackageName`, `@JNIClassName` and `@JNIFunctionName` annotations will be removed.  
+> Their parameters will be merged into `@JNIConnect`.  
 > Waiting for KSP fix: https://github.com/google/ksp/issues/2356
 
 #### 2. Let KSP generate the JNI Stub
@@ -149,8 +149,8 @@ Now, you can declare and call the original function in your Java or JVM Kotlin c
 package your.package.name
 
 object YourClass {
-    
-    external fun customFunction(a: String, b: Boolean, c: CharArray, d: Double): String // same signature as native
+    // same signature as native
+    external fun customFunction(a: String, b: Boolean, c: CharArray, d: Double): String
 }
 ```
 

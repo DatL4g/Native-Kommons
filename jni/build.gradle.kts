@@ -135,11 +135,11 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
     sourceSets {
-        commonTest.dependencies {
+        nativeTest.dependencies {
             implementation(libs.bundles.kotest)
         }
 
-        val desktopMain by creating {
+        val desktopNativeMain by creating {
             dependsOn(commonMain.get())
 
             linuxMain.orNull?.dependsOn(this)
@@ -148,13 +148,6 @@ kotlin {
             macosMain.orNull?.dependsOn(this)
         }
     }
-}
-
-tasks.withType<Test> {
-    reports {
-        html.required.set(true)
-    }
-    systemProperty("gradle.build.dir", project.layout.buildDirectory.asFile.orNull ?: project.buildDir)
 }
 
 fun getSystemJavaHome(): String? {

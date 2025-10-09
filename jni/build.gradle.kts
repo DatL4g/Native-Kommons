@@ -3,10 +3,15 @@ plugins {
     alias(libs.plugins.osdetector)
     alias(libs.plugins.kotest)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.publish)
+    `maven-publish`
+    signing
 }
 
-group = "dev.datlag.nkommons"
-version = "1.0.0"
+val libGroup = VersionCatalog.artifactName()
+val libName = "jni"
+group = libGroup
+version = libVersion
 
 kotlin {
     androidNativeX86 {
@@ -146,6 +151,45 @@ kotlin {
             mingwMain.orNull?.dependsOn(this)
 
             macosMain.orNull?.dependsOn(this)
+        }
+    }
+}
+
+mavenPublishing {
+    publishToMavenCentral(automaticRelease = true)
+    signAllPublications()
+
+    coordinates(
+        groupId = libGroup,
+        artifactId = libName,
+        version = libVersion
+    )
+
+    pom {
+        name.set("Native-Kommons JNI")
+        description.set("JNI library providing common types and utils.")
+        url.set("https://github.com/DatL4g/Native-Kommons")
+        inceptionYear.set("2025")
+
+        licenses {
+            license {
+                name.set("Apache License 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/DatL4g/Native-Kommons")
+            connection.set("scm:git:git://github.com/DATL4G/Native-Kommons.git")
+            developerConnection.set("scm:git:git://github.com/DATL4G/Native-Kommons.git")
+        }
+
+        developers {
+            developer {
+                id.set("DatL4g")
+                name.set("Jeff Retz")
+                url.set("https://github.com/DatL4g")
+            }
         }
     }
 }

@@ -1,14 +1,12 @@
 [versions]
+lib = "1.0.0"
 agp = "8.13.0"
-compile-testing = "0.10.0"
 kotlin = "2.2.20"
 osdetector = "1.7.3"
-vanniktechMavenPublish = "0.34.0"
 kotest = "6.0.3"
 kotlinpoet = "2.2.0"
 ksp = "2.2.20-2.0.3"
-mockito = "6.1.0"
-okio = "3.16.0"
+publish = "0.34.0"
 
 [libraries]
 kotest = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
@@ -17,10 +15,7 @@ kotest-property = { group = "io.kotest", name = "kotest-property", version.ref =
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
 kotlinpoet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref = "kotlinpoet" }
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
-mockito = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito" }
 test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
-test-compile = { group = "dev.zacsweers.kctfork", name = "core", version.ref = "compile-testing" }
-test-ksp = { group = "dev.zacsweers.kctfork", name = "ksp", version.ref = "compile-testing" }
 
 [bundles]
 kotest = [ "kotest", "kotest-framework", "kotest-property" ]
@@ -28,7 +23,7 @@ kotest = [ "kotest", "kotest-framework", "kotest-property" ]
 [plugins]
 android-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechMavenPublish" }
 osdetector = { id = "com.google.osdetector", version.ref = "osdetector" }
 kotest = { id = "io.kotest", version.ref = "kotest" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+publish = { id = "com.vanniktech.maven.publish", version.ref = "publish" }

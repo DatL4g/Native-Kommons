@@ -38,6 +38,12 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build
+        id: build
+        continue-on-error: true
+        run: ./gradlew :jni:build
+
+      - name: Build again (potential build fix)
+        if: steps.build.outcome == 'failure'
         run: ./gradlew :jni:build
 
   build-ksp:

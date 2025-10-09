@@ -14,20 +14,24 @@ internal object TypeMatcher {
     val Environment = CPointer.parameterizedBy(JNIEnvVar)
 
     val KBoolean = Boolean::class.asTypeName()
+    val KByte = Byte::class.asTypeName()
     val KInt = Int::class.asTypeName()
     val KLong = Long::class.asTypeName()
     val KFloat = Float::class.asTypeName()
     val KDouble = Double::class.asTypeName()
+    val KShort = Short::class.asTypeName()
     val KChar = Char::class.asTypeName()
     val KString = String::class.asTypeName()
     val KIntArray = IntArray::class.asTypeName()
 
     private const val TYPE_BINDING_PACKAGE = "dev.datlag.nkommons.binding"
     val JBoolean = ClassName(TYPE_BINDING_PACKAGE, "jboolean")
+    val JByte = ClassName(TYPE_BINDING_PACKAGE, "jbyte")
     val JInt = ClassName(TYPE_BINDING_PACKAGE, "jint")
     val JLong = ClassName(TYPE_BINDING_PACKAGE, "jlong")
     val JFloat = ClassName(TYPE_BINDING_PACKAGE, "jfloat")
     val JDouble = ClassName(TYPE_BINDING_PACKAGE, "jdouble")
+    val JShort = ClassName(TYPE_BINDING_PACKAGE, "jshort")
     val JChar = ClassName(TYPE_BINDING_PACKAGE, "jchar")
     val JString = ClassName(TYPE_BINDING_PACKAGE, "jstring")
     val JIntArray = ClassName(TYPE_BINDING_PACKAGE, "jintArray")
@@ -49,10 +53,12 @@ internal object TypeMatcher {
     fun jniTypeFor(param: TypeName, forReturn: Boolean): TypeName? {
         return when (param) {
             KBoolean -> JBoolean.copy(nullable = param.isNullable)
+            KByte -> JByte.copy(nullable = param.isNullable)
             KInt -> JInt.copy(nullable = param.isNullable)
             KLong -> JLong.copy(nullable = param.isNullable)
             KFloat -> JFloat.copy(nullable = param.isNullable)
             KDouble -> JDouble.copy(nullable = param.isNullable)
+            KShort -> JShort.copy(nullable = param.isNullable)
             KChar -> JChar.copy(nullable = param.isNullable)
             KString -> if (forReturn) {
                 JString.copy(nullable = true)

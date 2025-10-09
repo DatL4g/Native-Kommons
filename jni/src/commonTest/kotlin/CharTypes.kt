@@ -1,6 +1,6 @@
 import dev.datlag.nkommons.binding.jchar
-import dev.datlag.nkommons.binding.toJChar
-import dev.datlag.nkommons.binding.toKChar
+import dev.datlag.nkommons.utils.toJChar
+import dev.datlag.nkommons.utils.toKChar
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 

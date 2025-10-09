@@ -1,5 +1,6 @@
 package dev.datlag.nkommons
 
+import dev.datlag.nkommons.binding.jint
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.CPointerVarOf
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -30,3 +31,6 @@ typealias JavaVM = CPointer<JNIInvokeInterface>
 
 @OptIn(ExperimentalForeignApi::class)
 typealias JavaVMVar = CPointerVarOf<JavaVM>
+
+expect val JNI_COMMIT: jint
+expect val JNI_ABORT: jint

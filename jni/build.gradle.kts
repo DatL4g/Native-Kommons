@@ -145,7 +145,7 @@ kotlin {
         }
 
         val desktopNativeMain by creating {
-            dependsOn(commonMain.get())
+            dependsOn(nativeMain.get())
 
             linuxMain.orNull?.dependsOn(this)
             mingwMain.orNull?.dependsOn(this)

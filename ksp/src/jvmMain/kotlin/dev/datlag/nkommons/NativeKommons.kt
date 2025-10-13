@@ -71,6 +71,10 @@ class NativeKommons : SymbolProcessorProvider {
                 functionName = expectedFunctionName
             )
 
+            var envName: String = "env"
+            var attachEnv: Boolean = true
+            var attachClazz: Boolean = true
+
             val params = declaration.parameters.mapIndexed { index, param ->
                 val name = "p$index"
                 val typeName = param.type.toTypeName()
@@ -80,43 +84,53 @@ class NativeKommons : SymbolProcessorProvider {
                 } else {
                     "!!"
                 }
+                if (index == 0) {
+                    attachEnv = !(typeName typeOf TypeMatcher.Environment)
+                    if (!attachEnv) {
+                        envName = name
+                    }
+                }
+                if (index == 1 && !attachEnv) {
+                    attachClazz = !(typeName typeOf TypeMatcher.JObject)
+                }
+
                 val (code, subMember) = when {
                     expectedTypeName typeOf TypeMatcher.JBoolean && typeName typeOf TypeMatcher.KBoolean -> {
                         "$name.%M()" to TypeMatcher.Method.ToKBoolean
                     }
                     expectedTypeName typeOf TypeMatcher.JBooleanArray && typeName typeOf TypeMatcher.KBooleanArray -> {
-                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKBooleanArray
+                        "$name.%M($envName)$nullCheck" to TypeMatcher.Method.ToKBooleanArray
                     }
                     expectedTypeName typeOf TypeMatcher.JByteArray && typeName typeOf TypeMatcher.KByteArray -> {
-                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKByteArray
+                        "$name.%M($envName)$nullCheck" to TypeMatcher.Method.ToKByteArray
                     }
                     expectedTypeName typeOf TypeMatcher.JChar && typeName typeOf TypeMatcher.KChar -> {
                         "$name.%M()" to TypeMatcher.Method.ToKChar
                     }
                     expectedTypeName typeOf TypeMatcher.JCharArray && typeName typeOf TypeMatcher.KCharArray -> {
-                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKCharArray
+                        "$name.%M($envName)$nullCheck" to TypeMatcher.Method.ToKCharArray
                     }
                     expectedTypeName typeOf TypeMatcher.JDoubleArray && typeName typeOf TypeMatcher.KDoubleArray -> {
-                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKDoubleArray
+                        "$name.%M($envName)$nullCheck" to TypeMatcher.Method.ToKDoubleArray
                     }
                     expectedTypeName typeOf TypeMatcher.JFloatArray && typeName typeOf TypeMatcher.KFloatArray -> {
-                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKFloatArray
+                        "$name.%M($envName)$nullCheck" to TypeMatcher.Method.ToKFloatArray
                     }
                     expectedTypeName typeOf TypeMatcher.JIntArray && typeName typeOf TypeMatcher.KIntArray -> {
-                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKIntArray
+                        "$name.%M($envName)$nullCheck" to TypeMatcher.Method.ToKIntArray
                     }
                     expectedTypeName typeOf TypeMatcher.JLongArray && typeName typeOf TypeMatcher.KLongArray -> {
-                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKLongArray
+                        "$name.%M($envName)$nullCheck" to TypeMatcher.Method.ToKLongArray
                     }
                     expectedTypeName typeOf TypeMatcher.JShortArray && typeName typeOf TypeMatcher.KShortArray -> {
-                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKShortArray
+                        "$name.%M($envName)$nullCheck" to TypeMatcher.Method.ToKShortArray
                     }
                     expectedTypeName typeOf TypeMatcher.JString && typeName typeOf TypeMatcher.KString -> {
-                        "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKString
+                        "$name.%M($envName)$nullCheck" to TypeMatcher.Method.ToKString
                     }
 
                     expectedTypeName typeOf TypeMatcher.JObject && typeName typeOf TypeMatcher.NLocale -> {
-                        "%T(env, $name)$nullCheck" to TypeMatcher.NLocale
+                        "%T($envName, $name)$nullCheck" to TypeMatcher.NLocale
                     }
                     else -> name to null
                 }
@@ -131,52 +145,74 @@ class NativeKommons : SymbolProcessorProvider {
                     "return %M(${params.joinToString { it.code }}).%M()" to TypeMatcher.Method.ToJBoolean
                 }
                 expectedReturnType typeOf TypeMatcher.JBooleanArray && returnType typeOf TypeMatcher.KBooleanArray -> {
-                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJBooleanArray
+                    "return %M(${params.joinToString { it.code }}).%M($envName)" to TypeMatcher.Method.ToJBooleanArray
                 }
                 expectedReturnType typeOf TypeMatcher.JByteArray && returnType typeOf TypeMatcher.KByteArray -> {
-                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJByteArray
+                    "return %M(${params.joinToString { it.code }}).%M($envName)" to TypeMatcher.Method.ToJByteArray
                 }
                 expectedReturnType typeOf TypeMatcher.JChar && returnType typeOf TypeMatcher.KChar -> {
                     "return %M(${params.joinToString { it.code }}).%M()" to TypeMatcher.Method.ToJChar
                 }
                 expectedReturnType typeOf TypeMatcher.JCharArray && returnType typeOf TypeMatcher.KCharArray -> {
-                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJCharArray
+                    "return %M(${params.joinToString { it.code }}).%M($envName)" to TypeMatcher.Method.ToJCharArray
                 }
                 expectedReturnType typeOf TypeMatcher.JDoubleArray && returnType typeOf TypeMatcher.KDoubleArray -> {
-                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJDoubleArray
+                    "return %M(${params.joinToString { it.code }}).%M($envName)" to TypeMatcher.Method.ToJDoubleArray
                 }
                 expectedReturnType typeOf TypeMatcher.JFloatArray && returnType typeOf TypeMatcher.KFloatArray -> {
-                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJFloatArray
+                    "return %M(${params.joinToString { it.code }}).%M($envName)" to TypeMatcher.Method.ToJFloatArray
                 }
                 expectedReturnType typeOf TypeMatcher.JIntArray && returnType typeOf TypeMatcher.KIntArray -> {
-                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJIntArray
+                    "return %M(${params.joinToString { it.code }}).%M($envName)" to TypeMatcher.Method.ToJIntArray
                 }
                 expectedReturnType typeOf TypeMatcher.JLongArray && returnType typeOf TypeMatcher.KLongArray -> {
-                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJLongArray
+                    "return %M(${params.joinToString { it.code }}).%M($envName)" to TypeMatcher.Method.ToJLongArray
                 }
                 expectedReturnType typeOf TypeMatcher.JShortArray && returnType typeOf TypeMatcher.KShortArray -> {
-                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJShortArray
+                    "return %M(${params.joinToString { it.code }}).%M($envName)" to TypeMatcher.Method.ToJShortArray
                 }
                 expectedReturnType typeOf TypeMatcher.JString && returnType typeOf TypeMatcher.KString -> {
-                    "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJString
+                    "return %M(${params.joinToString { it.code }}).%M($envName)" to TypeMatcher.Method.ToJString
                 }
 
                 expectedReturnType typeOf TypeMatcher.JObject && returnType typeOf TypeMatcher.NLocale -> {
-                    "return %M(${params.joinToString { it.code }}).toJObject(env)" to null
+                    "return %M(${params.joinToString { it.code }}).toJObject($envName)" to null
                 }
                 else -> "return %M(${params.joinToString { it.code }})" to null
+            }
+
+            val finalParams = if (!attachEnv && attachClazz) {
+                val mutableParams = params.toMutableList()
+                mutableParams.add(
+                    index = 1,
+                    element = ParamInfo(
+                        code = "",
+                        member = null,
+                        spec = ParameterSpec.builder("clazz", TypeMatcher.JObject).build()
+                    )
+                )
+
+                mutableParams.toList()
+            } else {
+                params
             }
 
             val method = FunSpec.builder("_${functionName}JNI")
                 .addAnnotation(CNameUtils.NativeOptIn)
                 .addAnnotation(CNameUtils.cnameFor(jniCName))
-                .addParameter("env", TypeMatcher.Environment)
-                .addParameter("clazz", TypeMatcher.JObject)
-                .addParameters(params.map { it.spec })
+                .apply {
+                    if (attachEnv) {
+                        addParameter(envName, TypeMatcher.Environment)
+                        if (attachClazz) {
+                            addParameter("clazz", TypeMatcher.JObject)
+                        }
+                    }
+                }
+                .addParameters(finalParams.map { it.spec })
                 .returns(finalReturnType)
                 .apply {
                     val originalMethod = MemberName(packageName, functionName)
-                    val memberCalls = listOfNotNull(*params.mapNotNull { it.member }.toTypedArray(), subMember)
+                    val memberCalls = listOfNotNull(*finalParams.mapNotNull { it.member }.toTypedArray(), subMember)
 
                     addComment("FORCING BODY")
                     addStatement(code, originalMethod, *memberCalls.toTypedArray())

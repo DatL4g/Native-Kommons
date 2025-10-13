@@ -146,3 +146,15 @@ fun kspLocale(locale: Locale): Locale {
     println("KSP Locale: $locale")
     return locale
 }
+
+@OptIn(ExperimentalForeignApi::class)
+@JNIConnect
+fun envAttachTest(myEnv: CPointer<JNIEnvVar>): String {
+    return "Environment already attached"
+}
+
+@OptIn(ExperimentalForeignApi::class)
+@JNIConnect
+fun envAndObjectAttachTest(myEnv: CPointer<JNIEnvVar>, clazz: jobject): String {
+    return "Environment and object already attached"
+}

@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.publish)
     `maven-publish`
     signing
+    alias(libs.plugins.serialization)
 }
 
 val libGroup = VersionCatalog.artifactName()
@@ -140,6 +141,10 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
     sourceSets {
+        commonMain.dependencies {
+            implementation(libs.serialization)
+        }
+
         nativeTest.dependencies {
             implementation(libs.bundles.kotest)
         }

@@ -1,7 +1,13 @@
 import dev.datlag.nkommons.JNIClassName
 import dev.datlag.nkommons.JNIConnect
+import dev.datlag.nkommons.JNIEnvVar
 import dev.datlag.nkommons.JNIFunctionName
 import dev.datlag.nkommons.JNIPackageName
+import dev.datlag.nkommons.binding.jobject
+import dev.datlag.nkommons.models.Locale
+import kotlinx.cinterop.CPointer
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlin.experimental.ExperimentalNativeApi
 
 @JNIConnect
 fun boolExample(value: Boolean): Boolean {
@@ -110,4 +116,33 @@ fun concat(a: String, b: String): String {
 @JNIClassName("MainKt")
 fun mixed(a: String, b: Int, c: Boolean, d: IntArray, e: Char): String {
     return "$a, $b, $c, ${d.joinToString(separator = "|", prefix = "[", postfix = "]")}, $e"
+}
+
+@OptIn(ExperimentalNativeApi::class, ExperimentalForeignApi::class)
+@CName("Java_dev_datlag_nkommons_MainKt_defaultLocale")
+fun defaultLocale(env: CPointer<JNIEnvVar>, clazz: jobject) {
+    val locale = Locale(env)
+    println("Native Locale: $locale")
+}
+
+@OptIn(ExperimentalNativeApi::class, ExperimentalForeignApi::class)
+@CName("Java_dev_datlag_nkommons_MainKt_passedLocale")
+fun passedLocale(env: CPointer<JNIEnvVar>, clazz: jobject, instance: jobject?) {
+    val locale = Locale(env, instance)
+    println("Passed Native Locale: $locale")
+}
+
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("Java_dev_datlag_nkommons_MainKt_returnLocale")
+fun returnLocale(env: CPointer<JNIEnvVar>, clazz: jobject): jobject? {
+    val locale = Locale(language = "ja", region = "JP")
+    return locale.toJObject(env)
+}
+
+@JNIConnect
+@JNIPackageName("dev.datlag.nkommons")
+@JNIClassName("MainKt")
+fun kspLocale(locale: Locale): Locale {
+    println("KSP Locale: $locale")
+    return locale
 }

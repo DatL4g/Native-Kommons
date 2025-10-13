@@ -51,6 +51,9 @@ internal object TypeMatcher {
     val JString = ClassName(TYPE_BINDING_PACKAGE, "jstring")
     val JObject = ClassName(TYPE_BINDING_PACKAGE, "jobject")
 
+    private const val TYPE_MODEL_PACKAGE = "dev.datlag.nkommons.models"
+    val NLocale = ClassName(TYPE_MODEL_PACKAGE, "Locale")
+
     object Method {
 
         val ToJBoolean = MemberName("dev.datlag.nkommons.utils", "toJBoolean")
@@ -132,6 +135,11 @@ internal object TypeMatcher {
                 JString.copy(nullable = true)
             } else {
                 JString.copy(nullable = param.isNullable)
+            }
+            NLocale -> if (forReturn) {
+                JObject.copy(nullable = true)
+            } else {
+                JObject.copy(nullable = param.isNullable)
             }
 
             else -> null

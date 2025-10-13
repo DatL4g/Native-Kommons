@@ -114,6 +114,10 @@ class NativeKommons : SymbolProcessorProvider {
                     expectedTypeName typeOf TypeMatcher.JString && typeName typeOf TypeMatcher.KString -> {
                         "$name.%M(env)$nullCheck" to TypeMatcher.Method.ToKString
                     }
+
+                    expectedTypeName typeOf TypeMatcher.JObject && typeName typeOf TypeMatcher.NLocale -> {
+                        "%T(env, $name)$nullCheck" to TypeMatcher.NLocale
+                    }
                     else -> name to null
                 }
 
@@ -156,6 +160,10 @@ class NativeKommons : SymbolProcessorProvider {
                 expectedReturnType typeOf TypeMatcher.JString && returnType typeOf TypeMatcher.KString -> {
                     "return %M(${params.joinToString { it.code }}).%M(env)" to TypeMatcher.Method.ToJString
                 }
+
+                expectedReturnType typeOf TypeMatcher.JObject && returnType typeOf TypeMatcher.NLocale -> {
+                    "return %M(${params.joinToString { it.code }}).toJObject(env)" to null
+                }
                 else -> "return %M(${params.joinToString { it.code }})" to null
             }
 
@@ -183,7 +191,7 @@ class NativeKommons : SymbolProcessorProvider {
 
         data class ParamInfo(
             val code: String,
-            val member: MemberName?,
+            val member: Any?,
             val spec: ParameterSpec
         )
     }

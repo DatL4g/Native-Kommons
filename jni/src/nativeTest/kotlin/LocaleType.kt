@@ -22,7 +22,7 @@ class LocaleType : FunSpec({
     test("sr-Latn-RS is parsed correctly") {
         val tag = "sr-Latn-RS"
         val result = Locale.forLocaleTag(tag)
-        val expected = Locale(language = "sr", region = "RS", variant = "Latn")
+        val expected = Locale(language = "sr", region = "RS", script = "Latn")
 
         result?.shouldBeEqual(expected)
     }

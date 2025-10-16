@@ -8,6 +8,7 @@
 ![Language](https://img.shields.io/github/languages/top/DatL4g/Native-Kommons)
 [![licence](https://img.shields.io/badge/license-Apache%202%20-blue)](https://github.com/DatL4g/Native-Kommons/blob/master/LICENSE)
 [![github stars](https://img.shields.io/github/stars/DatL4g/Native-Kommons?style=social&label=Native-Kommons)](https://github.com/DatL4g/Native-Kommons)
+[![Build](https://github.com/DatL4g/Native-Kommons/actions/workflows/build.yml/badge.svg)](https://github.com/DatL4g/Native-Kommons/actions/workflows/build.yml)
 
 Native-Kommons is a powerful Kotlin Multiplatform library designed to simplify and unify JNI (Java Native Interface) development across Android, Desktop (Linux, macOS, Windows), and Kotlin/Native.  
 

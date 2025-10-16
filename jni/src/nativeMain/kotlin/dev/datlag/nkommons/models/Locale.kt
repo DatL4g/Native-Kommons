@@ -8,6 +8,7 @@ import dev.datlag.nkommons.binding.jobject
 import dev.datlag.nkommons.binding.jstring
 import dev.datlag.nkommons.pointedCommon
 import dev.datlag.nkommons.utils.attachToJValue
+import dev.datlag.nkommons.utils.invoke
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.cstr
@@ -158,7 +159,7 @@ data class Locale(
                 common.DeleteLocalRef?.invoke(env, defaultObject)
                 common.DeleteLocalRef?.invoke(env, jvmLocale)
             }
-        }
+        } ?: invoke()
 
         /**
          * Returns the a Locale from JVM instance.

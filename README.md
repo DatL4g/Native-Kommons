@@ -129,23 +129,16 @@ Write your function using standard Kotlin types and annotate it with `@JNIConnec
 
 ```kotlin
 import dev.datlag.nkommons.JNIConnect
-import dev.datlag.nkommons.JNIPackageName
-import dev.datlag.nkommons.JNIClassName
-import dev.datlag.nkommons.JNIFunctionName
 
-@JNIConnect
-@JNIPackageName("your.package.name")
-@JNIClassName("YourClass")
-@JNIFunctionName("customFunction")
+@JNIConnect(
+    packageName = "your.package.name",
+    className = "YourClass",
+    functionName = "customFunction"
+)
 fun example(a: String, b: Boolean, c: CharArray, d: Double): String {
     return "$a, $b, $c, $d"
 }
 ```
-
-> [!WARNING]
-> The provided `@JNIPackageName`, `@JNIClassName` and `@JNIFunctionName` annotations will be removed.  
-> Their parameters will be merged into `@JNIConnect`.  
-> Waiting for KSP fix: https://github.com/google/ksp/issues/2356
 
 #### 2. Let KSP generate the JNI Stub
 
@@ -179,3 +172,4 @@ Following types are currently supported for the auto generation:
 |  Long   |  LongArray   |
 |  Short  |  ShortArray  |
 | String  |              |
+| Locale  |              |

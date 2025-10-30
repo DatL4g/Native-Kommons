@@ -23,6 +23,11 @@ sealed interface Country {
      */
     val codeNumeric: Code.Numeric
 
+    /**
+     * Telephone country codes
+     */
+    val telephoneCodes: Set<Code.Telephone>
+
     @Serializable
     sealed interface Code {
 
@@ -143,6 +148,50 @@ sealed interface Country {
             }
 
         }
+
+        @Serializable
+        @ConsistentCopyVisibility
+        data class Telephone internal constructor(
+            val code: Int
+        ) : Code, Number() {
+
+            override fun toDouble(): Double {
+                return code.toDouble()
+            }
+
+            override fun toFloat(): Float {
+                return code.toFloat()
+            }
+
+            override fun toLong(): Long {
+                return code.toLong()
+            }
+
+            override fun toInt(): Int {
+                return code
+            }
+
+            override fun toShort(): Short {
+                return code.toShort()
+            }
+
+            override fun toByte(): Byte {
+                return code.toByte()
+            }
+
+            override fun toString(): String {
+                return "+$code"
+            }
+
+            companion object {
+
+                internal fun setFrom(vararg codes: Int): Set<Telephone> {
+                    return codes.map {
+                        Telephone(it)
+                    }.toSet()
+                }
+            }
+        }
     }
 
     companion object {
@@ -210,7 +259,7 @@ sealed interface Country {
                     CostaRica.codeAlpha2.contentEquals(validCode, ignoreCase = true) -> CostaRica
                     Croatia.codeAlpha2.contentEquals(validCode, ignoreCase = true) -> Croatia
                     Cuba.codeAlpha2.contentEquals(validCode, ignoreCase = true) -> Cuba
-                    Curaçao.codeAlpha2.contentEquals(validCode, ignoreCase = true) -> Curaçao
+                    Curacao.codeAlpha2.contentEquals(validCode, ignoreCase = true) -> Curacao
                     Cyprus.codeAlpha2.contentEquals(validCode, ignoreCase = true) -> Cyprus
                     Czechia.codeAlpha2.contentEquals(validCode, ignoreCase = true) -> Czechia
                     IvoryCoast.codeAlpha2.contentEquals(validCode, ignoreCase = true) -> IvoryCoast
@@ -464,7 +513,7 @@ sealed interface Country {
                     CostaRica.codeAlpha3.contentEquals(validCode, ignoreCase = true) -> CostaRica
                     Croatia.codeAlpha3.contentEquals(validCode, ignoreCase = true) -> Croatia
                     Cuba.codeAlpha3.contentEquals(validCode, ignoreCase = true) -> Cuba
-                    Curaçao.codeAlpha3.contentEquals(validCode, ignoreCase = true) -> Curaçao
+                    Curacao.codeAlpha3.contentEquals(validCode, ignoreCase = true) -> Curacao
                     Cyprus.codeAlpha3.contentEquals(validCode, ignoreCase = true) -> Cyprus
                     Czechia.codeAlpha3.contentEquals(validCode, ignoreCase = true) -> Czechia
                     IvoryCoast.codeAlpha3.contentEquals(validCode, ignoreCase = true) -> IvoryCoast
@@ -722,7 +771,7 @@ sealed interface Country {
                 CostaRica.codeNumeric.toInt() -> CostaRica
                 Croatia.codeNumeric.toInt() -> Croatia
                 Cuba.codeNumeric.toInt() -> Cuba
-                Curaçao.codeNumeric.toInt() -> Curaçao
+                Curacao.codeNumeric.toInt() -> Curacao
                 Cyprus.codeNumeric.toInt() -> Cyprus
                 Czechia.codeNumeric.toInt() -> Czechia
                 IvoryCoast.codeNumeric.toInt() -> IvoryCoast

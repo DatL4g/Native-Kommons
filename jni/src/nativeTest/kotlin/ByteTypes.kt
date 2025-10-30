@@ -1,4 +1,4 @@
-import dev.datlag.nkommons.binding.jbyte
+import dev.datlag.kommons.binding.jbyte
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 

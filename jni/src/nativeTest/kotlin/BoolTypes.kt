@@ -1,6 +1,6 @@
-import dev.datlag.nkommons.binding.jboolean
-import dev.datlag.nkommons.utils.toJBoolean
-import dev.datlag.nkommons.utils.toKBoolean
+import dev.datlag.kommons.binding.jboolean
+import dev.datlag.kommons.utils.toJBoolean
+import dev.datlag.kommons.utils.toKBoolean
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.cinterop.ExperimentalForeignApi

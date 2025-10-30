@@ -1,5 +1,5 @@
-import dev.datlag.nkommons.binding.jint
-import dev.datlag.nkommons.binding.jsize
+import dev.datlag.kommons.binding.jint
+import dev.datlag.kommons.binding.jsize
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe

@@ -1,4 +1,4 @@
-package dev.datlag.nkommons
+package dev.datlag.kommons
 
 import kotlinx.cinterop.ByteVarOf
 import kotlinx.cinterop.CPointed

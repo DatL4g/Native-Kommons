@@ -1,0 +1,67 @@
+package dev.datlag.kommons.utils
+
+import dev.datlag.kommons.JNIEnvVar
+import dev.datlag.kommons.RequiresRelease
+import dev.datlag.kommons.binding.jbooleanVar
+import dev.datlag.kommons.binding.jlongArray
+import dev.datlag.kommons.binding.jlongVar
+import dev.datlag.kommons.binding.jint
+import dev.datlag.kommons.binding.jsize
+import dev.datlag.kommons.pointedCommon
+import kotlinx.cinterop.CPointer
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.get
+import kotlinx.cinterop.invoke
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.pointed
+import kotlinx.cinterop.usePinned
+
+@OptIn(ExperimentalForeignApi::class)
+@RequiresRelease
+fun jlongArray.getLongElements(env: CPointer<JNIEnvVar>, isCopy: CPointer<jbooleanVar>? = null): CPointer<jlongVar>? {
+    val method = env.pointed.pointedCommon?.GetLongArrayElements ?: return null
+    return method.invoke(env, this, isCopy)
+}
+
+@OptIn(ExperimentalForeignApi::class)
+fun jlongArray.releaseElements(env: CPointer<JNIEnvVar>, elements: CPointer<jlongVar>, mode: jint = 0) {
+    val method = env.pointed.pointedCommon?.ReleaseLongArrayElements
+    method?.invoke(env, this, elements, mode)
+}
+
+@OptIn(ExperimentalForeignApi::class, RequiresRelease::class)
+fun jlongArray.toKLongArray(env: CPointer<JNIEnvVar>): LongArray? {
+    val length = this.getLength(env) ?: return null
+    val elements = this.getLongElements(env) ?: return null
+
+    val result = memScoped {
+        LongArray(length) {
+            elements[it]
+        }
+    }
+
+    this.releaseElements(env, elements)
+    return result
+}
+
+@OptIn(ExperimentalForeignApi::class)
+fun CPointer<JNIEnvVar>.newLongArray(size: jsize): jlongArray? {
+    val method = pointed.pointedCommon?.NewLongArray ?: return null
+    return method.invoke(this, size)
+}
+
+@OptIn(ExperimentalForeignApi::class)
+fun jlongArray.fill(env: CPointer<JNIEnvVar>, value: LongArray): jlongArray? {
+    val method = env.pointed.pointedCommon?.SetLongArrayRegion ?: return null
+    value.usePinned {
+        val pointer = it.addressOf(0)
+        method.invoke(env, this, 0, value.size, pointer)
+    }
+    return this
+}
+
+@OptIn(ExperimentalForeignApi::class)
+fun LongArray.toJLongArray(env: CPointer<JNIEnvVar>): jlongArray? {
+    return env.newLongArray(size)?.fill(env, this)
+}

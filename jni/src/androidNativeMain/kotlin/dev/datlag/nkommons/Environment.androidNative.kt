@@ -1,6 +1,6 @@
-package dev.datlag.nkommons
+package dev.datlag.kommons
 
-import dev.datlag.nkommons.binding.jint
+import dev.datlag.kommons.binding.jint
 import platform.android.JNI_ABORT
 import platform.android.JNI_COMMIT
 

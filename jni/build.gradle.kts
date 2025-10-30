@@ -15,44 +15,42 @@ group = libGroup
 version = libVersion
 
 kotlin {
-    val androidTargets = listOf(
-        androidNativeX86 {
-            binaries {
-                sharedLib()
-                staticLib()
+    androidNativeX86 {
+        binaries {
+            sharedLib()
+            staticLib()
+        }
+    }
+    androidNativeX64 {
+        binaries {
+            sharedLib {
+                linkerOpts += listOf(
+                    "-Wl,-z,max-page-size=16384",
+                    "-Wl,-z,common-page-size=16384",
+                    "-v"
+                )
             }
-        },
-        androidNativeX64 {
-            binaries {
-                sharedLib {
-                    linkerOpts += listOf(
-                        "-Wl,-z,max-page-size=16384",
-                        "-Wl,-z,common-page-size=16384",
-                        "-v"
-                    )
-                }
-                staticLib {
-                    linkerOpts += listOf(
-                        "-Wl,-z,max-page-size=16384",
-                        "-Wl,-z,common-page-size=16384",
-                        "-v"
-                    )
-                }
-            }
-        },
-        androidNativeArm32 {
-            binaries {
-                sharedLib()
-                staticLib()
-            }
-        },
-        androidNativeArm64 {
-            binaries {
-                sharedLib()
-                staticLib()
+            staticLib {
+                linkerOpts += listOf(
+                    "-Wl,-z,max-page-size=16384",
+                    "-Wl,-z,common-page-size=16384",
+                    "-v"
+                )
             }
         }
-    )
+    }
+    androidNativeArm32 {
+        binaries {
+            sharedLib()
+            staticLib()
+        }
+    }
+    androidNativeArm64 {
+        binaries {
+            sharedLib()
+            staticLib()
+        }
+    }
 
     val desktopTargets = mutableListOf(
         linuxX64 {
@@ -92,16 +90,6 @@ kotlin {
                 }
             }
         )
-    }
-
-    androidTargets.forEach { target ->
-        target.compilations.getByName("main") {
-            cinterops {
-                create("sysprop") {
-                    definitionFile.set(project.layout.projectDirectory.file("src/androidNativeMain/cinterop/sysprop.def"))
-                }
-            }
-        }
     }
 
     desktopTargets.forEach { target ->
@@ -155,6 +143,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.serialization)
+            api(project(":locale"))
         }
 
         nativeTest.dependencies {

@@ -1,6 +1,6 @@
-package dev.datlag.nkommons.utils
+package dev.datlag.kommons.utils
 
-import dev.datlag.nkommons.binding.jobject
+import dev.datlag.kommons.binding.jobject
 import kotlinx.cinterop.ExperimentalForeignApi
 
 /**

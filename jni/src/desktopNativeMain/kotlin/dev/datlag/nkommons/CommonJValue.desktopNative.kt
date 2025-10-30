@@ -1,16 +1,16 @@
-package dev.datlag.nkommons
+package dev.datlag.kommons
 
-import dev.datlag.nkommons.binding.jboolean
-import dev.datlag.nkommons.binding.jbyte
-import dev.datlag.nkommons.binding.jchar
-import dev.datlag.nkommons.binding.jdouble
-import dev.datlag.nkommons.binding.jfloat
-import dev.datlag.nkommons.binding.jint
-import dev.datlag.nkommons.binding.jlong
-import dev.datlag.nkommons.binding.jobject
-import dev.datlag.nkommons.binding.jshort
-import dev.datlag.nkommons.utils.forCommon
-import dev.datlag.nkommons.utils.forPlatform
+import dev.datlag.kommons.binding.jboolean
+import dev.datlag.kommons.binding.jbyte
+import dev.datlag.kommons.binding.jchar
+import dev.datlag.kommons.binding.jdouble
+import dev.datlag.kommons.binding.jfloat
+import dev.datlag.kommons.binding.jint
+import dev.datlag.kommons.binding.jlong
+import dev.datlag.kommons.binding.jobject
+import dev.datlag.kommons.binding.jshort
+import dev.datlag.kommons.utils.forCommon
+import dev.datlag.kommons.utils.forPlatform
 import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(markerClass = [ExperimentalForeignApi::class])

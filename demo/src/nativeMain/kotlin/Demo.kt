@@ -1,7 +1,10 @@
+import dev.datlag.kommons.Locale
 import dev.datlag.nkommons.JNIConnect
 import dev.datlag.nkommons.JNIEnvVar
 import dev.datlag.nkommons.binding.jobject
-import dev.datlag.nkommons.models.Locale
+import dev.datlag.nkommons.toJObject
+import dev.datlag.nkommons.invoke
+import dev.datlag.kommons.invoke
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlin.experimental.ExperimentalNativeApi

@@ -1,6 +1,7 @@
 [versions]
 lib = "1.1.0"
 agp = "8.13.0"
+browser = "0.5.0"
 kotlin = "2.2.21"
 osdetector = "1.7.3"
 kotest = "6.0.4"
@@ -11,6 +12,7 @@ serialization = "1.9.0"
 versions = "0.53.0"
 
 [libraries]
+browser = { group = "org.jetbrains.kotlinx", name = "kotlinx-browser", version.ref = "browser" }
 kotest = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
 kotest-framework = { group = "io.kotest", name = "kotest-framework-engine", version.ref = "kotest" }
 kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }

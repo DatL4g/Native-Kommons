@@ -7,11 +7,13 @@ import platform.Foundation.languageCode
 import platform.Foundation.scriptCode
 import platform.Foundation.variantCode
 
+fun Locale.asAppleLocale(): NSLocale = NSLocale(this.toString())
+
 operator fun Locale.Companion.invoke(
     locale: NSLocale
 ): Locale = Locale(
     language = locale.languageCode,
-    country = locale.countryCode?.ifBlank { null },
+    country = locale.countryCode?.let(Country::forCodeOrNull),
     script = locale.scriptCode?.ifBlank { null },
     variant = locale.variantCode?.ifBlank { null }
 )

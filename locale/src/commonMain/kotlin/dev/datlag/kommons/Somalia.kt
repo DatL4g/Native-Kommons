@@ -1,0 +1,8 @@
+package dev.datlag.kommons
+
+
+data object Somalia : Country {
+    override val codeAlpha2: Country.Code.Alpha2 = Country.Code.Alpha2("SO")
+    override val codeAlpha3: Country.Code.Alpha3 = Country.Code.Alpha3("SOM")
+    override val codeNumeric: Country.Code.Numeric = Country.Code.Numeric(706)
+}

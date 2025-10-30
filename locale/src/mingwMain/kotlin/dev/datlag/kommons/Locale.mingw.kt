@@ -30,7 +30,7 @@ actual operator fun Locale.Companion.invoke(): Locale? {
 
         return@memScoped if (length > 0) {
             val localeTag = localeNameBuffer.toKString()
-            forLocaleTag(localeTag)
+            forLanguageTag(localeTag)
         } else {
             null
         }
@@ -50,7 +50,7 @@ actual operator fun Locale.Companion.invoke(): Locale? {
         GetLocaleInfoW(langId.toUInt(), LOCALE_SISO3166CTRYNAME.toUInt(), regionBuffer, 10)
 
         val region = regionBuffer.toKString()
-        forLocaleTag("$language-$region")
+        forLanguageTag("$language-$region")
     }
 
     return systemLocaleModern() ?: systemLocaleLegacy() ?: systemLocaleFromEnvironment()

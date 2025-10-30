@@ -28,7 +28,7 @@ actual operator fun Locale.Companion.invoke(): Locale? {
 
     if (window.exists() && window.navigator.exists()) {
         val language = window.navigator.language
-        forLocaleTag(language)?.let {
+        forLanguageTag(language)?.let {
             return it
         }
     }

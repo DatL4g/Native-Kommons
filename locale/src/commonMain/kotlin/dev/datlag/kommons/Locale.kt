@@ -5,26 +5,71 @@ import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
 @Serializable
-data class Locale(
+data class Locale @JvmOverloads constructor(
     private val language: String,
-    private val country: String?,
+    private val country: Country?,
     private val script: String? = null,
     private val variant: String? = null
 ) {
+
+    @JvmOverloads
+    constructor(
+        language: String,
+        country: String,
+        script: String? = null,
+        variant: String? = null
+    ) : this(
+        language = language,
+        country = Country.forCodeOrNull(country),
+        script = script,
+        variant = variant
+    )
+
+    init {
+        require(language.isNotBlank()) {
+            "Valid language is required"
+        }
+    }
+
     fun getLanguage(): String {
         return language
     }
 
-    fun getCountry(): String? {
+    fun getCountry(): Country? {
         return country
     }
 
     fun getScript(): String? {
-        return script
+        return script?.ifBlank { null }
     }
 
     fun getVariant(): String? {
-        return variant
+        return variant?.ifBlank { null }
+    }
+
+    override fun toString(): String = buildString {
+        append(language.lowercase())
+
+        script?.takeIf { it.isNotBlank() }?.let {
+            append('-')
+            append(it.replaceFirstChar { char ->
+                if (char.isLowerCase()) {
+                    char.titlecaseChar()
+                } else {
+                    char
+                }
+            })
+        }
+
+        country?.codeAlpha2?.toString()?.takeIf { it.isNotBlank() }?.let {
+            append('-')
+            append(it.uppercase())
+        }
+
+        variant?.takeIf { it.isNotBlank() }?.let {
+            append('-')
+            append(it.uppercase())
+        }
     }
 
     companion object {
@@ -37,7 +82,7 @@ data class Locale(
 
         @JvmStatic
         @JvmOverloads
-        fun forLocaleTag(languageTag: String, vararg separators: Char = charArrayOf('_', '-')): Locale? {
+        fun forLanguageTag(languageTag: String, vararg separators: Char = charArrayOf('_', '-')): Locale? {
             fun String.isAlpha() = all { it.isLetter() }
             fun String.isDigit() = all { it.isDigit() }
             fun String.isAlphaNumeric() = all { it.isLetterOrDigit() }
@@ -75,7 +120,7 @@ data class Locale(
 
             return Locale(
                 language = language,
-                country = region,
+                country = region?.let(Country::forCodeOrNull),
                 script = script,
                 variant = variant
             )
@@ -83,7 +128,7 @@ data class Locale(
 
         internal fun forPosixString(value: String): Locale? {
             val coreTag = value.substringBefore('.').substringBefore('@')
-            return forLocaleTag(coreTag)
+            return forLanguageTag(coreTag)
         }
     }
 }

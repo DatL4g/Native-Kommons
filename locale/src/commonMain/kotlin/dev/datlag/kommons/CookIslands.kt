@@ -1,0 +1,8 @@
+package dev.datlag.kommons
+
+
+data object CookIslands : Country {
+    override val codeAlpha2: Country.Code.Alpha2 = Country.Code.Alpha2("CK")
+    override val codeAlpha3: Country.Code.Alpha3 = Country.Code.Alpha3("COK")
+    override val codeNumeric: Country.Code.Numeric = Country.Code.Numeric(184)
+}

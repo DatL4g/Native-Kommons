@@ -23,7 +23,7 @@ actual operator fun Locale.Companion.invoke(): Locale? {
     }
 
     fun systemLocaleFromProperty(): Locale? {
-        systemProperty(ANDROID_PROP_LOCALE)?.let(::forLocaleTag)?.let {
+        systemProperty(ANDROID_PROP_LOCALE)?.let(::forLanguageTag)?.let {
             return it
         }
 
@@ -31,7 +31,7 @@ actual operator fun Locale.Companion.invoke(): Locale? {
         val country = systemProperty(ANDROID_PROP_COUNTRY)
 
         return if (!lang.isNullOrBlank()) {
-            forLocaleTag("$lang-$country")
+            forLanguageTag("$lang-$country")
         } else {
             null
         }

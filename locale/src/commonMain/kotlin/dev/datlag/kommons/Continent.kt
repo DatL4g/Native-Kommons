@@ -2,6 +2,7 @@ package dev.datlag.kommons
 
 import dev.datlag.kommons.serializer.ContinentAsGeoNameStringSerializer
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 
 @Serializable(with = ContinentAsGeoNameStringSerializer::class)
@@ -74,9 +75,9 @@ sealed interface Continent {
     @Serializable
     sealed interface Code {
 
+        @JvmInline
         @Serializable
-        @ConsistentCopyVisibility
-        data class GeoName internal constructor(
+        value class GeoName internal constructor(
             val code: String
         ) : Code, CharSequence by code {
 
@@ -85,9 +86,9 @@ sealed interface Continent {
             }
         }
 
+        @JvmInline
         @Serializable
-        @ConsistentCopyVisibility
-        data class STANAG internal constructor(
+        value class STANAG internal constructor(
             val code: String
         ) : Code, CharSequence by code {
 

@@ -9,8 +9,8 @@ This model allows us to focus entirely on quality and tackle unique, high-value 
 Sponsoring is managed directly through GitHub Sponsors or Polar.  
 Choose a tier that works for you to gain access to the private repository and our package registry.
 
-[:simple-githubsponsors: GitHub Sponsor](https://github.com/sponsors/DatL4g/){ .md-button .md-button--primary }
-[Polar Sponsor](https://polar.sh/DatL4g){ .md-button }
+[:simple-githubsponsors: GitHub Sponsors](https://github.com/sponsors/DatL4g/){ .md-button .md-button--primary }
+[Polar](https://polar.sh/DatL4g){ .md-button }
 
 ## Get Access
 
@@ -34,8 +34,8 @@ After you are granted repository access, you will need to configure the package 
 maven {
     url = uri("https://maven.pkg.github.com/DatL4g/Native-Kommons")
     credentials {
-        username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-        password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+        username = project.findProperty("gpr.user") as? String ?: System.getenv("USERNAME")
+        password = project.findProperty("gpr.key") as? String ?: System.getenv("TOKEN")
     }
 }
 ```

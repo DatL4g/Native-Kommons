@@ -3,6 +3,7 @@ package dev.datlag.kommons
 import dev.datlag.kommons.common.isLatinLetters
 import dev.datlag.kommons.serializer.CountryAsAlpha2StringSerializer
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 
 @Serializable(with = CountryAsAlpha2StringSerializer::class)
@@ -55,9 +56,9 @@ sealed interface Country {
          *
          * @param code country code.
          */
+        @JvmInline
         @Serializable
-        @ConsistentCopyVisibility
-        data class Alpha2 internal constructor(
+        value class Alpha2 internal constructor(
             val code: String
         ) : Code, CharSequence by code {
 
@@ -86,9 +87,9 @@ sealed interface Country {
          *
          * @param code country code.
          */
+        @JvmInline
         @Serializable
-        @ConsistentCopyVisibility
-        data class Alpha3 internal constructor(
+        value class Alpha3 internal constructor(
             val code: String
         ) : Code, CharSequence by code {
 
@@ -212,9 +213,9 @@ sealed interface Country {
             }
         }
 
+        @JvmInline
         @Serializable
-        @ConsistentCopyVisibility
-        data class Domain internal constructor(
+        value class Domain internal constructor(
             val code: String
         ) : Code, CharSequence by code {
 

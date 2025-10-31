@@ -6,4 +6,5 @@ data object Belize : Country {
     override val codeAlpha3: Country.Code.Alpha3 = Country.Code.Alpha3("BLZ")
     override val codeNumeric: Country.Code.Numeric = Country.Code.Numeric(84)
     override val telephoneCodes: Set<Country.Code.Telephone> = Country.Code.Telephone.setFrom(501)
+    override val continent: Continent = Continent.NorthAmerica
 }

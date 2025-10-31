@@ -6,4 +6,5 @@ data object CaymanIslands : Country {
     override val codeAlpha3: Country.Code.Alpha3 = Country.Code.Alpha3("CYM")
     override val codeNumeric: Country.Code.Numeric = Country.Code.Numeric(136)
     override val telephoneCodes: Set<Country.Code.Telephone> = Country.Code.Telephone.setFrom(1345)
+    override val continent: Continent = Continent.NorthAmerica
 }

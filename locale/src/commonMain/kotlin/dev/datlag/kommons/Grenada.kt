@@ -6,4 +6,5 @@ data object Grenada : Country {
     override val codeAlpha3: Country.Code.Alpha3 = Country.Code.Alpha3("GRD")
     override val codeNumeric: Country.Code.Numeric = Country.Code.Numeric(308)
     override val telephoneCodes: Set<Country.Code.Telephone> = Country.Code.Telephone.setFrom(1473)
+    override val continent: Continent = Continent.NorthAmerica
 }

@@ -6,4 +6,5 @@ data object Micronesia : Country {
     override val codeAlpha3: Country.Code.Alpha3 = Country.Code.Alpha3("FSM")
     override val codeNumeric: Country.Code.Numeric = Country.Code.Numeric(583)
     override val telephoneCodes: Set<Country.Code.Telephone> = Country.Code.Telephone.setFrom(691)
+    override val continent: Continent = Continent.Oceania
 }

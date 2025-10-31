@@ -6,4 +6,5 @@ data object Estonia : Country {
     override val codeAlpha3: Country.Code.Alpha3 = Country.Code.Alpha3("EST")
     override val codeNumeric: Country.Code.Numeric = Country.Code.Numeric(233)
     override val telephoneCodes: Set<Country.Code.Telephone> = Country.Code.Telephone.setFrom(372)
+    override val continent: Continent = Continent.Europe
 }

@@ -6,4 +6,5 @@ data object Pitcairn : Country {
     override val codeAlpha3: Country.Code.Alpha3 = Country.Code.Alpha3("PCN")
     override val codeNumeric: Country.Code.Numeric = Country.Code.Numeric(612)
     override val telephoneCodes: Set<Country.Code.Telephone> = Country.Code.Telephone.setFrom(64)
+    override val continent: Continent = Continent.Oceania
 }

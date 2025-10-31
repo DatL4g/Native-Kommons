@@ -6,4 +6,5 @@ data object Seychelles : Country {
     override val codeAlpha3: Country.Code.Alpha3 = Country.Code.Alpha3("SYC")
     override val codeNumeric: Country.Code.Numeric = Country.Code.Numeric(690)
     override val telephoneCodes: Set<Country.Code.Telephone> = Country.Code.Telephone.setFrom(248)
+    override val continent: Continent = Continent.Africa
 }

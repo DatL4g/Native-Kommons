@@ -6,4 +6,5 @@ data object Kyrgyzstan : Country {
     override val codeAlpha3: Country.Code.Alpha3 = Country.Code.Alpha3("KGZ")
     override val codeNumeric: Country.Code.Numeric = Country.Code.Numeric(417)
     override val telephoneCodes: Set<Country.Code.Telephone> = Country.Code.Telephone.setFrom(996)
+    override val continent: Continent = Continent.Asia
 }

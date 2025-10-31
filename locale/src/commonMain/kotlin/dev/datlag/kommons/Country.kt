@@ -28,6 +28,19 @@ sealed interface Country {
      */
     val telephoneCodes: Set<Code.Telephone>
 
+    /**
+     * Country related continent
+     */
+    val continent: Continent
+
+    /**
+     * Country flag as emoji
+     */
+    val emoji: String
+        get() = codeAlpha2.map {
+            "${0xD83C.toChar()}${(0xDDA5 + it.code).toChar()}"
+        }.joinToString(separator = "")
+
     @Serializable
     sealed interface Code {
 

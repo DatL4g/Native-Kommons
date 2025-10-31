@@ -1,6 +1,7 @@
 import dev.datlag.kommons.Locale
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.equals.shouldBeEqual
+import io.kotest.matchers.nulls.shouldNotBeNull
 
 class Parsing : FunSpec({
     test("en_US is parsed correctly") {
@@ -8,7 +9,8 @@ class Parsing : FunSpec({
         val result = Locale.forLanguageTag(tag)
         val expected = Locale(language = "en", country = "US")
 
-        result?.shouldBeEqual(expected)
+        result.shouldNotBeNull()
+        result.shouldBeEqual(expected)
     }
 
     test("de_DE is parsed correctly") {
@@ -16,7 +18,8 @@ class Parsing : FunSpec({
         val result = Locale.forLanguageTag(tag)
         val expected = Locale(language = "de", country = "DE")
 
-        result?.shouldBeEqual(expected)
+        result.shouldNotBeNull()
+        result.shouldBeEqual(expected)
     }
 
     test("sr-Latn-RS is parsed correctly") {
@@ -24,6 +27,7 @@ class Parsing : FunSpec({
         val result = Locale.forLanguageTag(tag)
         val expected = Locale(language = "sr", country = "RS", script = "Latn")
 
-        result?.shouldBeEqual(expected)
+        result.shouldNotBeNull()
+        result.shouldBeEqual(expected)
     }
 })

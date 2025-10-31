@@ -24,6 +24,12 @@ sealed interface Country {
     val codeNumeric: Code.Numeric
 
     /**
+     * Country domain code
+     */
+    val domain: Code.Domain
+        get() = Code.Domain(codeAlpha2.code.lowercase())
+
+    /**
      * Telephone country codes
      */
     val telephoneCodes: Set<Code.Telephone>
@@ -203,6 +209,17 @@ sealed interface Country {
                         Telephone(it)
                     }.toSet()
                 }
+            }
+        }
+
+        @Serializable
+        @ConsistentCopyVisibility
+        data class Domain internal constructor(
+            val code: String
+        ) : Code, CharSequence by code {
+
+            override fun toString(): String {
+                return ".$code"
             }
         }
     }

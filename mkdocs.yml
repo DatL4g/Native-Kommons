@@ -1,0 +1,49 @@
+# Site
+site_name: Native-Kommons
+site_author: Jeff Retz
+site_description: Collection of Kotlin Multiplatform (KMP) libraries and utilities.
+
+# Repository
+repo_name: Native-Kommons
+repo_url: https://github.com/DatL4g/Native-Kommons
+
+# Extra
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/DatL4g
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/jeff-retz/
+
+# Extensions
+markdown_extensions:
+  - attr_list
+  - tables
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+# Navigation
+nav:
+  - Home: index.md
+  - Sponsorship: sponsorship.md
+
+# Theme
+theme: 
+  name: material
+  palette:
+    - scheme: default
+      primary: pink
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: pink
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Manrope

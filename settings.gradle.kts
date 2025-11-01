@@ -1,6 +1,7 @@
 rootProject.name = "Native-Kommons"
 
 include(":annotations")
+include(":cache")
 include(":jni")
 include(":ksp")
 include(":locale")

@@ -228,7 +228,7 @@ sealed interface Country {
     companion object {
 
         @JvmStatic
-        fun forCodeOrNull(code: CharSequence): Country? {
+        fun forCodeOrNull(code: String): Country? {
             val trimmed = code.trim()
 
             fun parseAlpha2(): Country? {

@@ -7,13 +7,25 @@ site_description: Collection of Kotlin Multiplatform (KMP) libraries and utiliti
 repo_name: Native-Kommons
 repo_url: https://github.com/DatL4g/Native-Kommons
 
+# Copyright
+copyright: Copyright &copy; 2025 Jeff Retz
+
 # Extra
 extra:
   social:
     - icon: fontawesome/brands/github-alt
       link: https://github.com/DatL4g
+    - icon: other/polar
+      link: https://polar.sh/DatL4g
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/jeff-retz/
+  tags:
+    Android: android
+    JVM: jvm
+    Linux: linux
+    Apple: apple
+    Web: web
+    Windows: windows
 
 # Extensions
 markdown_extensions:
@@ -25,15 +37,25 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      options:
+        custom_icons:
+          - docs/overrides/.icons
+
+# Plugins
+plugins:
+  - tags
 
 # Navigation
 nav:
   - Home: index.md
   - Sponsorship: sponsorship.md
+  - Libraries:
+      - Locale: libraries/locale.md
 
 # Theme
 theme: 
   name: material
+  custom_dir: docs/overrides
   palette:
     - scheme: default
       primary: pink
@@ -50,3 +72,11 @@ theme:
   features:
     - navigation.instant
     - navigation.instant.progress
+  icon:
+    tag:
+      android: material/android
+      jvm: material/language-java
+      linux: material/linux
+      apple: material/apple
+      web: fontawesome/brands/js-square
+      windows: material/microsoft-windows

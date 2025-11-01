@@ -14,7 +14,7 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
     private val timeSource: TimeSource = TimeSource.Monotonic,
     private val expireAfterWriteDuration: Duration = Duration.INFINITE,
     private val expireAfterAccessDuration: Duration = Duration.INFINITE
-) : Cache<K, V> {
+) : Cache<K, V>, AutoCloseable {
 
     private val checkWrite = expireAfterWriteDuration.isFinite()
     private val checkAccess = expireAfterAccessDuration.isFinite()
@@ -254,6 +254,10 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
         } finally {
             lock.unlock()
         }
+    }
+
+    override fun close() {
+        tryClear()
     }
 
     private fun clearWithoutLocking() {

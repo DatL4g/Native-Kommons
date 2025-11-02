@@ -6,10 +6,10 @@ import kotlin.jvm.JvmStatic
 
 @Serializable
 data class Locale @JvmOverloads constructor(
-    private val language: String,
-    private val country: Country?,
-    private val script: String? = null,
-    private val variant: String? = null
+    val language: String,
+    val country: Country?,
+    val script: String? = null,
+    val variant: String? = null
 ) {
 
     @JvmOverloads
@@ -29,22 +29,6 @@ data class Locale @JvmOverloads constructor(
         require(language.isNotBlank()) {
             "Valid language is required"
         }
-    }
-
-    fun getLanguage(): String {
-        return language
-    }
-
-    fun getCountry(): Country? {
-        return country
-    }
-
-    fun getScript(): String? {
-        return script?.ifBlank { null }
-    }
-
-    fun getVariant(): String? {
-        return variant?.ifBlank { null }
     }
 
     override fun toString(): String = buildString {

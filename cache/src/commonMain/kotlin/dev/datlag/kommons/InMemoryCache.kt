@@ -107,6 +107,8 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
             return null
         }
 
+        entry.accessCount++
+
         if (checkAccess) {
             entry.accessTimeMark = now
         }
@@ -146,7 +148,7 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
 
                 checkEviction()
 
-                val newEntry = Entry(key, value, now, now)
+                val newEntry = Entry(key, value, now, now, accessCount = 1)
                 storage[key] = newEntry
                 linkEntryAtTail(newEntry)
                 atomicSize.getAndIncrement()
@@ -160,6 +162,7 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
                 existingEntry.value = value
                 existingEntry.writeTimeMark = now
                 existingEntry.accessTimeMark = now
+                existingEntry.accessCount++
 
                 if (evictionPolicy == EvictionPolicy.LRU || evictionPolicy == EvictionPolicy.MRU) {
                     moveToTail(existingEntry)
@@ -184,13 +187,23 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
         return newValue
     }
 
+    suspend fun putAll(map: Map<K, V>) {
+        val now = timeSource.markNow()
+
+        lock.withLock {
+            map.forEach { (key, value) ->
+                putWithoutLocking(key, value, now)
+            }
+        }
+    }
+
     private fun putWithoutLocking(key: K, value: V, now: TimeMark): V {
         val existingEntry = storage[key]
 
         if (existingEntry == null) {
             checkEviction()
 
-            val newEntry = Entry(key, value, now, now)
+            val newEntry = Entry(key, value, now, now, accessCount = 1)
             storage[key] = newEntry
             linkEntryAtTail(newEntry)
             atomicSize.getAndIncrement()
@@ -198,6 +211,7 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
             existingEntry.value = value
             existingEntry.writeTimeMark = now
             existingEntry.accessTimeMark = now
+            existingEntry.accessCount++
 
             if (evictionPolicy == EvictionPolicy.LRU || evictionPolicy == EvictionPolicy.MRU) {
                 moveToTail(existingEntry)
@@ -288,23 +302,41 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
     }
 
     private fun checkEviction(size: Long = maxSize) {
-        if (size <= 0) {
+        if (size <= 0 || atomicSize.value < size) {
             return
         }
 
-        while (atomicSize.value >= size) {
-            val entryToEvict = when (evictionPolicy) {
-                EvictionPolicy.LRU, EvictionPolicy.FIFO -> head
-                EvictionPolicy.MRU, EvictionPolicy.FILO -> tail
+        if (evictionPolicy == EvictionPolicy.LFU) {
+            val numToEvict = (atomicSize.value - size).toInt()
+            if (numToEvict <= 0) {
+                return
             }
 
-            if (entryToEvict == null) {
-                break
-            }
+            val evictionCandidates = storage.values.sortedBy { it.accessCount }
 
-            unlinkEntry(entryToEvict)
-            storage.remove(entryToEvict.key)
-            atomicSize.getAndDecrement()
+            for (i in 0 until numToEvict) {
+                val entryToEvict = evictionCandidates[i]
+
+                unlinkEntry(entryToEvict)
+                storage.remove(entryToEvict.key)
+                atomicSize.getAndDecrement()
+            }
+        } else {
+            while (atomicSize.value >= size) {
+                val entryToEvict = when (evictionPolicy) {
+                    EvictionPolicy.LRU, EvictionPolicy.FIFO -> head
+                    EvictionPolicy.MRU, EvictionPolicy.FILO -> tail
+                    EvictionPolicy.LFU -> null
+                }
+
+                if (entryToEvict == null) {
+                    break
+                }
+
+                unlinkEntry(entryToEvict)
+                storage.remove(entryToEvict.key)
+                atomicSize.getAndDecrement()
+            }
         }
     }
 
@@ -356,7 +388,8 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
         var writeTimeMark: TimeMark,
         var accessTimeMark: TimeMark,
         var prev: Entry<K, V>? = null,
-        var next: Entry<K, V>? = null
+        var next: Entry<K, V>? = null,
+        var accessCount: Long = 0
     ) {
         private fun writeExpired(): Boolean {
             return if (checkWrite) {

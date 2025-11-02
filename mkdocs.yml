@@ -32,6 +32,9 @@ markdown_extensions:
   - attr_list
   - tables
   - admonition
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.emoji:
@@ -40,6 +43,20 @@ markdown_extensions:
       options:
         custom_icons:
           - docs/overrides/.icons
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
 
 # Plugins
 plugins:
@@ -50,6 +67,7 @@ nav:
   - Home: index.md
   - Sponsorship: sponsorship.md
   - Libraries:
+      - Cache: libraries/cache.md
       - Locale: libraries/locale.md
 
 # Theme
@@ -57,21 +75,28 @@ theme:
   name: material
   custom_dir: docs/overrides
   palette:
-    - scheme: default
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
       primary: pink
       toggle:
-        icon: material/brightness-7
+        icon: material/weather-night
         name: Switch to dark mode
-    - scheme: slate
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       primary: pink
       toggle:
-        icon: material/brightness-4
+        icon: material/weather-sunny
         name: Switch to light mode
   font:
     text: Manrope
   features:
     - navigation.instant
     - navigation.instant.progress
+    - navigation.top
+    - content.tabs.link
   icon:
     tag:
       android: material/android

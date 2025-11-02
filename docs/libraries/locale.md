@@ -51,40 +51,48 @@ dependencies {
 
 ## 🛠️ Usage
 
-### Creating a Locale
+=== "Locale"
 
-You can create a `Locale` instance in several ways:
+    ```kotlin
+    // From language and country strings
+    val byStrings = Locale("en", "US")
+    
+    // By parsing a BCP 47 language tag (handles mixed delimiters)
+    val byTag = Locale.forLanguageTag("sr_Latn-RS")
+    
+    // Get the system's default locale
+    val systemDefault = Locale()
+    
+    // Using the full constructor for scripts and variants
+    val fullLocale = Locale(
+        language = "zh",
+        country = "CN",
+        script = "Hans",
+        variant = "PINYIN"
+    )
+    ```
 
-```kotlin
-// From language and country strings
-val byStrings = Locale("en", "US")
+=== "Country"
 
-// By parsing a BCP 47 language tag (handles mixed delimiters)
-val byTag = Locale.forLanguageTag("sr_Latn-RS")
+    ```kotlin
+    // Look up by Alpha-2, Alpha-3
+    // Also tries to parse numeric code
+    val byString = Country.forCodeOrNull("DE")
+    
+    // Look up by ISO 3166-1 numeric code
+    val byNumber = Country.forCodeOrNull(8) // Albania
+    ```
 
-// Get the system's default locale
-val systemDefault = Locale()
+=== "Continent"
 
-// Using the full constructor for scripts and variants
-val fullLocale = Locale(
-    language = "zh",
-    country = "CN",
-    script = "Hans",
-    variant = "PINYIN"
-)
-```
-
-### Working with Countries
-
-The library includes a rich `Country` model. You can look up countries using their standard codes.
-
-```kotlin
-// Look up by Alpha-2, Alpha-3
-val byString = Country.forCodeOrNull("DE")
-
-// Look up by ISO 3166-1 numeric code
-val byNumber = Country.forCodeOrNull(8) // Albania
-```
+    ```kotlin
+    // Look up by GeoName or STANAG code
+    // Also tries to parse UN M49 code
+    val byString = Continent.forCodeOrNull("EU") // Europe
+    
+    // Look up by UN M49 code
+    val byNumber = Continent.forCodeOrNull(142) // Asia
+    ```
 
 ### Getting Properties
 

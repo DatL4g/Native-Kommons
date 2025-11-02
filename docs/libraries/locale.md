@@ -36,22 +36,38 @@ The following targets are supported:
 
 Integration using Version Catalog is highly recommended for aligned version usage.
 
-```toml
-[libraries]
-kommons-locale = { group = "dev.datlag.kommons", name = "locale", version.ref = "locale" }
-```
+=== "Version Catalog"
 
-Then add the dependency to your module:
+    First declare the library in your Version Catalog:
 
-```kotlin
-dependencies {
-    implementation(libs.kommons.locale)
-}
-```
+    ```toml
+    [libraries]
+    kommons-locale = { group = "dev.datlag.kommons", name = "locale", version.ref = "locale" }
+    ```
+    
+    Then add the dependency to your module:
+    
+    ```kotlin
+    dependencies {
+        implementation(libs.kommons.locale)
+    }
+    ```
+
+=== "Gradle"
+
+    Simply add the dependency like this:
+
+    ```kotlin
+    dependencies {
+        implementation("dev.datlag.kommons:locale:<version>")
+    }
+    ```
 
 ## 🛠️ Usage
 
 === "Locale"
+
+    Creating a Locale object:
 
     ```kotlin
     // From language and country strings
@@ -72,7 +88,30 @@ dependencies {
     )
     ```
 
+    <h3>Getting Properties</h3>
+    
+    Accessing Locale properties is easy:
+
+    ```kotlin
+    val locale = Locale.forLanguageTag("fr-CA")
+    
+    println(locale.language) // "fr"
+    println(locale.country) // Country object for Canada
+    ```
+
+    <h3>Converting to a Language Tag</h3>
+    
+    The `toString()` method is implemented to return a BCP 47 compliant language tag.
+    
+    ```kotlin
+    val locale = Locale("zh", "CN", script = "Hans")
+    println(locale.toString()) 
+    // Output: "zh-Hans-CN"
+    ```
+
 === "Country"
+
+    Receiving a Country object:
 
     ```kotlin
     // Look up by Alpha-2, Alpha-3
@@ -83,7 +122,29 @@ dependencies {
     val byNumber = Country.forCodeOrNull(8) // Albania
     ```
 
+    <h3>Getting Properties</h3>
+    
+    Accessing the rich Country object:
+    
+    ```kotlin
+    val country = locale.country
+    if (country != null) {
+        println(country.emoji)        // "🇨🇦"
+        println(country.codeAlpha3)   // e.g., Code.Alpha3("CAN")
+        println(country.codeNumeric)  // e.g., Code.Numeric("124")
+        println(country.telephoneCodes) // e.g., [Code.Telephone("+1")]
+        println(country.continent)    // Continent object for Country
+    }
+    ```
+
+    <h3>Code Types</h3>
+
+    All code types (Code.Alpha2, Code.Alpha3, Code.Numeric, etc...) implement either a CharSequence or extend Number.  
+    This decision was made to be as flexible as possible instead of simply providing a String, while providing and keeping easy usage.
+
 === "Continent"
+
+    Receiving a Continent object:
 
     ```kotlin
     // Look up by GeoName or STANAG code
@@ -94,53 +155,16 @@ dependencies {
     val byNumber = Continent.forCodeOrNull(142) // Asia
     ```
 
-### Getting Properties
-
-Use the getter methods to access the immutable properties. The `Country` object, in particular, is rich with data.
-
-```kotlin
-// Locale properties
-val locale = Locale.forLanguageTag("fr-CA")
-
-println(locale.getLanguage()) // "fr"
-println(locale.getCountry())   // Country object for Canada
-
-// Accessing the rich Country object
-val country = locale.getCountry()
-if (country != null) {
-    println(country.emoji)        // "🇨🇦"
-    println(country.codeAlpha3)   // e.g., Code.Alpha3("CAN")
-    println(country.codeNumeric)  // e.g., Code.Numeric("124")
-    println(country.telephoneCodes) // e.g., [Code.Telephone("+1")]
+    <h3>Getting Properties</h3>
     
-    // Access nested Continent data
+    Access nested Continent data:
+    
+    ```kotlin
     val continent = country.continent
-    println(continent.geoName)    // e.g., Code.GeoName("NA")
-}
-```
-
-### Converting to a Language Tag
-
-The `toString()` method is implemented to return a BCP 47 compliant language tag.
-
-```kotlin
-val locale = Locale("zh", "CN", script = "Hans")
-println(locale.toString()) 
-// Output: "zh-Hans-CN"
-```
-
-### Serialization (with kotlinx.serialization)
-
-Thanks to the `@Serializable` annotation, serialization and deserialization work out of the box.
-
-```kotlin
-val locale = Locale("en", "US", variant = "POSIX")
-
-// Serialize
-val jsonString = Json.encodeToString(locale)
-println(jsonString)
-// Output: {"language":"en","country":{"codeAlpha2":...},"script":null,"variant":"POSIX"}
-
-// Deserialize
-val decodedLocale = Json.decodeFromString<Locale>(jsonString)
-```
+    println(continent.geoName) // e.g., Code.GeoName("NA")
+    ```
+    
+    <h3>Code Types</h3>
+    
+    All code types (Code.GeoName, Code.STANAG, Code.Numeric) implement either a CharSequence or extend Number.  
+    This decision was made to be as flexible as possible instead of simply providing a String, while providing and keeping easy usage.

@@ -52,11 +52,17 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
   - pymdownx.critic
   - pymdownx.caret
   - pymdownx.keys
   - pymdownx.mark
   - pymdownx.tilde
+  - toc:
+      permalink: '#'
+  - md_in_html
 
 # Plugins
 plugins:
@@ -65,7 +71,9 @@ plugins:
 # Navigation
 nav:
   - Home: index.md
-  - Sponsorship: sponsorship.md
+  - Sponsorship:
+      - 'Payment & Billing': sponsorship/payment.md
+      - Access management: sponsorship/access.md
   - Libraries:
       - Cache: libraries/cache.md
       - Locale: libraries/locale.md

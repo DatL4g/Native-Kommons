@@ -10,7 +10,7 @@ import platform.posix.getenv
 import sysprop.PROP_VALUE_MAX
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual fun Locale.Companion.systemDefault(): Locale? {
+internal actual fun Locale.Factory.systemDefault(): Locale? {
     fun systemProperty(key: String): String? = memScoped {
         val buffer = allocArray<ByteVar>(PROP_VALUE_MAX)
         val len = __system_property_get(key, buffer)

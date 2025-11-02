@@ -11,7 +11,7 @@ import platform.posix.fopen
 import platform.posix.getenv
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual fun Locale.Companion.systemDefault(): Locale? {
+internal actual fun Locale.Factory.systemDefault(): Locale? {
     fun systemLocaleFromEnvironment(): Locale? {
         getenv(POSIX_ENV_LC_ALL)?.toKString()?.ifBlank { null }?.let(::forPosixString)?.let {
             return it
@@ -32,7 +32,7 @@ internal actual fun Locale.Companion.systemDefault(): Locale? {
 
                     if (line.startsWith("LANG=")) {
                         val value = line.substringAfter('=').trim().removeSurrounding("\"").removeSurrounding("\'")
-                        return Locale.Companion.forPosixString(value)
+                        return Locale.forPosixString(value)
                     }
                 }
             }

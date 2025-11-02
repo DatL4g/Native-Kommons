@@ -14,7 +14,7 @@ import platform.windows.LOCALE_SISO639LANGNAME
 import platform.windows.WCHARVar
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual fun Locale.Companion.systemDefault(): Locale? {
+internal actual fun Locale.Factory.systemDefault(): Locale? {
     fun systemLocaleFromEnvironment(): Locale? {
         getenv(POSIX_ENV_LC_ALL)?.toKString()?.ifBlank { null }?.let(::forPosixString)?.let {
             return it

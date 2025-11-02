@@ -7,13 +7,13 @@ fun Locale.asJavaLocale() = java.util.Locale.Builder()
     .setVariant(variant)
     .build()
 
-operator fun Locale.Companion.invoke(locale: java.util.Locale) = Locale(
+operator fun Locale.Factory.invoke(locale: java.util.Locale) = Locale(
     language = locale.language,
     country = Country.forCodeOrNull(locale.country),
     script = locale.script,
     variant = locale.variant
 )
 
-internal actual fun Locale.Companion.systemDefault(): Locale? {
+internal actual fun Locale.Factory.systemDefault(): Locale? {
     return invoke(java.util.Locale.getDefault())
 }

@@ -1,11 +1,18 @@
 package dev.datlag.kommons
 
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
-@Serializable
+@Serializable(with = Locale.Factory::class)
 data class Locale @JvmOverloads constructor(
     @JvmField val language: String,
     @JvmField val country: Country?,
@@ -57,13 +64,36 @@ data class Locale @JvmOverloads constructor(
         }
     }
 
-    companion object {
+    companion object Factory : KSerializer<Locale?> {
+        override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Locale", PrimitiveKind.STRING)
 
         internal const val ANDROID_PROP_LOCALE = "persist.sys.locale"
         internal const val ANDROID_PROP_LANGUAGE = "persist.sys.language"
         internal const val ANDROID_PROP_COUNTRY = "persist.sys.country"
         internal const val POSIX_ENV_LANG = "LANG"
         internal const val POSIX_ENV_LC_ALL = "LC_ALL"
+
+        @OptIn(ExperimentalSerializationApi::class)
+        override fun serialize(
+            encoder: Encoder,
+            value: Locale?
+        ) {
+            if (value != null) {
+                encoder.encodeNotNullMark()
+                encoder.encodeString(value.toString())
+            } else {
+                encoder.encodeNull()
+            }
+        }
+
+        @OptIn(ExperimentalSerializationApi::class)
+        override fun deserialize(decoder: Decoder): Locale? {
+            return if (decoder.decodeNotNullMark()) {
+                forLanguageTag(decoder.decodeString())
+            } else {
+                decoder.decodeNull()
+            }
+        }
 
         @JvmStatic
         @JvmOverloads
@@ -121,7 +151,7 @@ data class Locale @JvmOverloads constructor(
     }
 }
 
-internal expect fun Locale.Companion.systemDefault(): Locale?
+internal expect fun Locale.Factory.systemDefault(): Locale?
 
 
 

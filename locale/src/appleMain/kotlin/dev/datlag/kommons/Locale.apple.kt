@@ -9,7 +9,7 @@ import platform.Foundation.variantCode
 
 fun Locale.asAppleLocale(): NSLocale = NSLocale(this.toString())
 
-operator fun Locale.Companion.invoke(
+operator fun Locale.Factory.invoke(
     locale: NSLocale
 ): Locale = Locale(
     language = locale.languageCode,
@@ -18,6 +18,6 @@ operator fun Locale.Companion.invoke(
     variant = locale.variantCode?.ifBlank { null }
 )
 
-internal actual fun Locale.Companion.systemDefault(): Locale? {
+internal actual fun Locale.Factory.systemDefault(): Locale? {
     return invoke(NSLocale.autoupdatingCurrentLocale)
 }

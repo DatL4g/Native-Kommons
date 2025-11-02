@@ -18,6 +18,6 @@ operator fun Locale.Companion.invoke(
     variant = locale.variantCode?.ifBlank { null }
 )
 
-actual operator fun Locale.Companion.invoke(): Locale? {
+internal actual fun Locale.Companion.systemDefault(): Locale? {
     return invoke(NSLocale.autoupdatingCurrentLocale)
 }

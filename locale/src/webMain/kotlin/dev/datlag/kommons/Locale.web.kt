@@ -9,7 +9,7 @@ import kotlin.js.unsafeCast
 
 @OptIn(ExperimentalWasmJsInterop::class)
 @Suppress("UNREACHABLE_CODE")
-actual operator fun Locale.Companion.invoke(): Locale? {
+internal actual fun Locale.Companion.systemDefault(): Locale? {
     fun Any?.asString(): String? {
         return this?.let {
             when (it) {

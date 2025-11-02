@@ -1,10 +1,10 @@
 package dev.datlag.kommons
 
 fun Locale.asJavaLocale() = java.util.Locale.Builder()
-    .setLanguage(getLanguage())
-    .setRegion(getCountry()?.codeAlpha2?.toString())
-    .setScript(getScript())
-    .setVariant(getVariant())
+    .setLanguage(language)
+    .setRegion(country?.codeAlpha2?.toString())
+    .setScript(script)
+    .setVariant(variant)
     .build()
 
 operator fun Locale.Companion.invoke(locale: java.util.Locale) = Locale(
@@ -14,6 +14,6 @@ operator fun Locale.Companion.invoke(locale: java.util.Locale) = Locale(
     variant = locale.variant
 )
 
-actual operator fun Locale.Companion.invoke(): Locale? {
+internal actual fun Locale.Companion.systemDefault(): Locale? {
     return invoke(java.util.Locale.getDefault())
 }

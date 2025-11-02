@@ -1,5 +1,5 @@
 package dev.datlag.kommons
 
-actual operator fun Locale.Companion.invoke(): Locale? {
+internal actual fun Locale.Companion.systemDefault(): Locale? {
     return null
 }

@@ -1,15 +1,16 @@
 package dev.datlag.kommons
 
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
 @Serializable
 data class Locale @JvmOverloads constructor(
-    val language: String,
-    val country: Country?,
-    val script: String? = null,
-    val variant: String? = null
+    @JvmField val language: String,
+    @JvmField val country: Country?,
+    @JvmField val script: String? = null,
+    @JvmField val variant: String? = null
 ) {
 
     @JvmOverloads
@@ -110,6 +111,9 @@ data class Locale @JvmOverloads constructor(
             )
         }
 
+        @JvmStatic
+        operator fun invoke() = systemDefault()
+
         internal fun forPosixString(value: String): Locale? {
             val coreTag = value.substringBefore('.').substringBefore('@')
             return forLanguageTag(coreTag)
@@ -117,7 +121,7 @@ data class Locale @JvmOverloads constructor(
     }
 }
 
-expect operator fun Locale.Companion.invoke(): Locale?
+internal expect fun Locale.Companion.systemDefault(): Locale?
 
 
 

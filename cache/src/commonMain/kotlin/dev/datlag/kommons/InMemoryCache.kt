@@ -148,7 +148,7 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
 
                 checkEviction()
 
-                val newEntry = Entry(key, value, now, now, accessCount = 1)
+                val newEntry = Entry(key, value, now, now)
                 storage[key] = newEntry
                 linkEntryAtTail(newEntry)
                 atomicSize.getAndIncrement()
@@ -203,7 +203,7 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
         if (existingEntry == null) {
             checkEviction()
 
-            val newEntry = Entry(key, value, now, now, accessCount = 1)
+            val newEntry = Entry(key, value, now, now)
             storage[key] = newEntry
             linkEntryAtTail(newEntry)
             atomicSize.getAndIncrement()
@@ -312,14 +312,30 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
                 return
             }
 
-            val evictionCandidates = storage.values.sortedBy { it.accessCount }
+            val heap = PriorityQueue<Entry<K, V>>(compareByDescending { it.accessCount })
+            for (entry in storage.values) {
+                if (heap.size < numToEvict) {
+                    heap.offer(entry)
+                } else {
+                    val maxOfSmallest = heap.peek()?.accessCount ?: DEFAULT_ACCESS_COUNT
 
-            for (i in 0 until numToEvict) {
-                val entryToEvict = evictionCandidates[i]
+                    if (maxOfSmallest == DEFAULT_ACCESS_COUNT) {
+                        break
+                    }
 
-                unlinkEntry(entryToEvict)
-                storage.remove(entryToEvict.key)
+                    if (entry.accessCount < maxOfSmallest) {
+                        heap.poll()
+                        heap.offer(entry)
+                    }
+                }
+            }
+
+            var item = heap.poll()
+            while (item != null) {
+                unlinkEntry(item)
+                storage.remove(item.key)
                 atomicSize.getAndDecrement()
+                item = heap.poll()
             }
         } else {
             while (atomicSize.value >= size) {
@@ -389,7 +405,7 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
         var accessTimeMark: TimeMark,
         var prev: Entry<K, V>? = null,
         var next: Entry<K, V>? = null,
-        var accessCount: Long = 0
+        var accessCount: Long = DEFAULT_ACCESS_COUNT
     ) {
         private fun writeExpired(): Boolean {
             return if (checkWrite) {
@@ -410,5 +426,9 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
         fun isExpired(): Boolean {
             return writeExpired() || accessExpired()
         }
+    }
+
+    companion object {
+        private const val DEFAULT_ACCESS_COUNT = 1L
     }
 }

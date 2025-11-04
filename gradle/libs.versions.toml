@@ -3,10 +3,13 @@ lib = "1.1.0"
 agp = "8.13.0"
 androidx-collection = "1.5.0"
 atomicfu = "0.29.0"
+benchmark = "0.4.14"
 browser = "0.5.0"
+cache4k = "0.14.0" # Benchmark Only
 coroutines = "1.10.2"
 kotlin = "2.2.21"
 osdetector = "1.7.3"
+kache = "2.1.1" # Benchmark Only
 kotest = "6.0.4"
 kotlinpoet = "2.2.0"
 ksp = "2.3.0"
@@ -17,6 +20,9 @@ versions = "0.53.0"
 [libraries]
 androidx-collection = { group = "androidx.collection", name = "collection", version.ref = "androidx-collection" }
 atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu", version.ref = "atomicfu" }
+benchmark = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "benchmark" }
+benchmark-cache4k = { group = "io.github.reactivecircus.cache4k", name = "cache4k", version.ref = "cache4k" }
+benchmark-kache = { group = "com.mayakapps.kache", name = "kache", version.ref = "kache" }
 browser = { group = "org.jetbrains.kotlinx", name = "kotlinx-browser", version.ref = "browser" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotest = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
@@ -32,8 +38,10 @@ test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "ko
 kotest = [ "kotest", "kotest-framework", "kotest-property" ]
 
 [plugins]
+allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 android-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 atomicfu = { id = "org.jetbrains.kotlinx.atomicfu", version.ref = "atomicfu" }
+benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "benchmark" }
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 osdetector = { id = "com.google.osdetector", version.ref = "osdetector" }
 kotest = { id = "io.kotest", version.ref = "kotest" }

@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.publish)
-    alias(libs.plugins.serialization)
     alias(libs.plugins.kotest)
     alias(libs.plugins.ksp)
     `maven-publish`

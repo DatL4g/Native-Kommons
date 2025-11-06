@@ -13,7 +13,8 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
     private val evictionPolicy: EvictionPolicy = EvictionPolicy.LRU,
     private val timeSource: TimeSource = TimeSource.Monotonic,
     private val expireAfterWriteDuration: Duration = Duration.INFINITE,
-    private val expireAfterAccessDuration: Duration = Duration.INFINITE
+    private val expireAfterAccessDuration: Duration = Duration.INFINITE,
+    private val sizeCalculator: SizeCalculator<K, V> = SizeCalculator { _, _ -> 1 }
 ) : Cache<K, V>, AutoCloseable {
 
     private val checkWrite = expireAfterWriteDuration.isFinite()
@@ -75,14 +76,7 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
 
     fun tryGet(key: K): V? {
         if (!lock.tryLock()) {
-            val existing = try {
-                storage[key]
-            } catch (_: Throwable) { null } ?: return null
-
-            if (existing.isExpired()) {
-                return null
-            }
-            return existing.value
+            return null
         }
 
         val now = timeSource.markNow()
@@ -103,7 +97,7 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
         if (entry.isExpired()) {
             unlinkEntry(entry)
             storage.remove(entry.key)
-            atomicSize.getAndDecrement()
+            atomicSize.addAndGet(-entry.weight)
             return null
         }
 
@@ -146,20 +140,35 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
             if (existingEntry == null) {
                 oldValue = null
 
-                checkEviction()
+                val newWeight = sizeCalculator(key, value)
+                if (newWeight > maxSize) {
+                    return@withLock oldValue
+                }
 
-                val newEntry = Entry(key, value, now, now)
+                checkEviction(maxSize - newWeight)
+
+                val newEntry = Entry(key, value, newWeight, now, now)
                 storage[key] = newEntry
                 linkEntryAtTail(newEntry)
-                atomicSize.getAndIncrement()
+                atomicSize.addAndGet(newWeight)
             } else {
                 oldValue = if (existingEntry.isExpired()) {
                     null
                 } else {
                     existingEntry.value
                 }
+                val oldWeight = existingEntry.weight
+                val newWeight = sizeCalculator(key, value)
+
+                if (newWeight > maxSize) {
+                    removeWithoutLocking(key)
+                    return@withLock oldValue
+                }
+
+                checkEviction(maxSize - (newWeight - oldWeight))
 
                 existingEntry.value = value
+                existingEntry.weight = newWeight
                 existingEntry.writeTimeMark = now
                 existingEntry.accessTimeMark = now
                 existingEntry.accessCount++
@@ -167,6 +176,8 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
                 if (evictionPolicy == EvictionPolicy.LRU || evictionPolicy == EvictionPolicy.MRU) {
                     moveToTail(existingEntry)
                 }
+
+                atomicSize.addAndGet(newWeight - oldWeight)
             }
 
             oldValue
@@ -201,14 +212,30 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
         val existingEntry = storage[key]
 
         if (existingEntry == null) {
-            checkEviction()
+            val newWeight = sizeCalculator(key, value)
+            if (newWeight > maxSize) {
+                return value
+            }
 
-            val newEntry = Entry(key, value, now, now)
+            checkEviction(maxSize - newWeight)
+
+            val newEntry = Entry(key, value, newWeight, now, now)
             storage[key] = newEntry
             linkEntryAtTail(newEntry)
-            atomicSize.getAndIncrement()
+            atomicSize.addAndGet(newWeight)
         } else {
+            val oldWeight = existingEntry.weight
+            val newWeight = sizeCalculator(key, value)
+
+            if (newWeight > maxSize) {
+                removeWithoutLocking(key)
+                return value
+            }
+
+            checkEviction(maxSize - (newWeight - oldWeight))
+
             existingEntry.value = value
+            existingEntry.weight = newWeight
             existingEntry.writeTimeMark = now
             existingEntry.accessTimeMark = now
             existingEntry.accessCount++
@@ -216,6 +243,8 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
             if (evictionPolicy == EvictionPolicy.LRU || evictionPolicy == EvictionPolicy.MRU) {
                 moveToTail(existingEntry)
             }
+
+            atomicSize.addAndGet(newWeight - oldWeight)
         }
         return value
     }
@@ -243,7 +272,7 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
 
         unlinkEntry(entry)
         storage.remove(entry.key)
-        atomicSize.getAndDecrement()
+        atomicSize.addAndGet(-entry.weight)
 
         if (entry.isExpired()) {
             return null
@@ -301,8 +330,26 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
         }
     }
 
+    suspend fun asMap(): Map<K, V> {
+        return lock.withLock {
+            storage.mapValues { (_, value) -> value.value }
+        }
+    }
+
+    fun tryAsMap(): Map<K, V>? {
+        if (!lock.tryLock()) {
+            return null
+        }
+
+        return try {
+            storage.mapValues { (_, value) -> value.value }
+        } finally {
+            lock.unlock()
+        }
+    }
+
     private fun checkEviction(size: Long = maxSize) {
-        if (size <= 0 || atomicSize.value < size) {
+        if (size <= 0 || atomicSize.value <= size) {
             return
         }
 
@@ -334,11 +381,11 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
             while (item != null) {
                 unlinkEntry(item)
                 storage.remove(item.key)
-                atomicSize.getAndDecrement()
+                atomicSize.addAndGet(-item.weight)
                 item = heap.poll()
             }
         } else {
-            while (atomicSize.value >= size) {
+            while (atomicSize.value > size) {
                 val entryToEvict = when (evictionPolicy) {
                     EvictionPolicy.LRU, EvictionPolicy.FIFO -> head
                     EvictionPolicy.MRU, EvictionPolicy.FILO -> tail
@@ -351,7 +398,7 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
 
                 unlinkEntry(entryToEvict)
                 storage.remove(entryToEvict.key)
-                atomicSize.getAndDecrement()
+                atomicSize.addAndGet(-entryToEvict.weight)
             }
         }
     }
@@ -398,9 +445,14 @@ class InMemoryCache<K : Any, V : Any> @JvmOverloads constructor(
         tail = entry
     }
 
+    fun interface SizeCalculator<K, V> {
+        operator fun invoke(key: K, value: V): Long
+    }
+
     private inner class Entry<K, V>(
         val key: K,
         var value: V,
+        var weight: Long,
         var writeTimeMark: TimeMark,
         var accessTimeMark: TimeMark,
         var prev: Entry<K, V>? = null,

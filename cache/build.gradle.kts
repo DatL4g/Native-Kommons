@@ -9,7 +9,7 @@ plugins {
 }
 
 val libGroup = VersionCatalog.artifactName()
-val libName = "locale"
+val libName = "cache"
 group = libGroup
 version = libVersion
 

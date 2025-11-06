@@ -5,6 +5,8 @@ include(":cache", ":cache:benchmark")
 include(":jni")
 include(":ksp")
 include(":locale")
+include(":utils")
+
 include(":demo")
 
 pluginManagement {

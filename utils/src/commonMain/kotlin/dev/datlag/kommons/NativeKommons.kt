@@ -9,8 +9,6 @@ expect object NativeKommons : Quote {
     infix fun <T : Any> KClass<T>.typeOf(base: KClass<*>): Boolean
 
     object Platform {
-
-        // Level 3
         val isIOS: Boolean
         val isTVOS: Boolean
         val isWatchOS: Boolean

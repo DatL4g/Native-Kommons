@@ -35,4 +35,12 @@ We provide clean, "common" KMP APIs for complex tasks, built with a unique focus
 
     [:octicons-arrow-right-24: Take a look](libraries/cache.md)
 
+-   __NanoId__
+
+    ---
+
+    A fast, secure, and URL-friendly unique ID generator.
+
+    [:octicons-arrow-right-24: Learn More](libraries/nanoid.md)
+
 </div>

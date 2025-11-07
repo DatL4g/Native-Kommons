@@ -18,15 +18,15 @@ interface Quote {
         get() = quote(SINGLE_QUOTATION)
 
     @JvmOverloads
-    fun Char.quote(mark: Char = DOUBLE_QUOTATION) = buildString {
-        append(mark)
+    fun Char.quote(start: Char = DOUBLE_QUOTATION, end: Char = DOUBLE_QUOTATION) = buildString {
+        append(start)
         append(this@quote)
-        append(mark)
+        append(end)
     }
 
     @JvmOverloads
-    fun CharSequence.quote(mark: Char = DOUBLE_QUOTATION) = buildString {
-        append(mark)
+    fun CharSequence.quote(start: Char = DOUBLE_QUOTATION, end: Char = DOUBLE_QUOTATION) = buildString {
+        append(start)
         for (char in this@quote) {
             when (char) {
                 '\\' -> append("\\\\")
@@ -37,7 +37,7 @@ interface Quote {
                 else -> append(char)
             }
         }
-        append(mark)
+        append(end)
     }
 
     companion object {

@@ -16,14 +16,11 @@ data object NanoId {
     const val DEFAULT_ALPHABET = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     const val DEFAULT_SIZE = 12
 
-    @JvmStatic
-    fun calculateMask(alphabet: String): Int {
+    private fun calculateMask(alphabet: String): Int {
         return (2 shl floor(log((alphabet.length - 1).toDouble(), 2.0)).toInt()) -1
     }
 
-    @JvmStatic
-    @JvmOverloads
-    fun calculateStep(alphabet: String, size: Int = DEFAULT_SIZE, mask: Int = calculateMask(alphabet)): Int {
+    private fun calculateStep(alphabet: String, size: Int = DEFAULT_SIZE, mask: Int = calculateMask(alphabet)): Int {
         return ceil(1.6 * mask * size / alphabet.length).toInt()
     }
 

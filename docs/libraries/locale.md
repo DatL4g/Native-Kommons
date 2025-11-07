@@ -42,7 +42,7 @@ Integration using Version Catalog is highly recommended for aligned version usag
 
     ```toml
     [libraries]
-    kommons-locale = { group = "dev.datlag.kommons", name = "locale", version.ref = "locale" }
+    kommons-locale = { group = "dev.datlag.kommons", name = "locale", version.ref = "kommons" }
     ```
     
     Then add the dependency to your module:

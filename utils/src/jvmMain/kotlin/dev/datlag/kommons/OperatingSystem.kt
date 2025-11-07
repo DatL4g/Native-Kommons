@@ -75,7 +75,7 @@ internal sealed interface OperatingSystem {
     }
 
     data object Windows : OperatingSystem {
-        override val names = arrayOf("win", "windows", "dos")
+        override val names = arrayOf("win", "windows", "dos", "mingw")
         override val openArguments: Array<Array<String>> = arrayOf(
             arrayOf("rundll32", "url.dll,FileProtocolHandler", "$1")
         )

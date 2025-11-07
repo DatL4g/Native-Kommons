@@ -5,6 +5,7 @@ include(":cache", ":cache:benchmark")
 include(":jni")
 include(":ksp")
 include(":locale")
+include(":nanoid")
 include(":utils")
 
 include(":demo")

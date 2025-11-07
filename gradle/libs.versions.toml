@@ -10,6 +10,7 @@ coroutines = "1.10.2"
 kotlin = "2.2.21"
 osdetector = "1.7.3"
 kache = "2.1.1" # Benchmark Only
+korlibs-crypto = "6.0.1"
 kotest = "6.0.4"
 kotlinpoet = "2.2.0"
 ksp = "2.3.0"
@@ -25,6 +26,7 @@ benchmark-cache4k = { group = "io.github.reactivecircus.cache4k", name = "cache4
 benchmark-kache = { group = "com.mayakapps.kache", name = "kache", version.ref = "kache" }
 browser = { group = "org.jetbrains.kotlinx", name = "kotlinx-browser", version.ref = "browser" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+korlibs-crypto = { group = "com.soywiz", name = "korlibs-crypto", version.ref = "korlibs-crypto" }
 kotest = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
 kotest-framework = { group = "io.kotest", name = "kotest-framework-engine", version.ref = "kotest" }
 kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }

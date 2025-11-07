@@ -27,7 +27,7 @@ internal sealed interface OperatingSystem {
     fun openUri(uri: URI): Boolean {
         fun openByCommands(): Boolean {
             openArguments.forEach { open ->
-                Kommons.suspendCatching {
+                NativeKommons.suspendCatching {
                     val command = arrayOfNulls<String>(open.size)
                     for (i in open.indices) {
                         if (open[i] == "$1") {
@@ -85,7 +85,7 @@ internal sealed interface OperatingSystem {
         private const val PROPERTY_OS_NAME = "os.name"
 
         internal fun browseUri(uri: URI): Boolean {
-            return Kommons.suspendCatching {
+            return NativeKommons.suspendCatching {
                 if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
                     Desktop.getDesktop().browse(uri)
                     true
@@ -105,7 +105,7 @@ internal sealed interface OperatingSystem {
         }
 
         fun matching(): OperatingSystem? {
-            val name = Kommons.systemProperty(PROPERTY_OS_NAME) ?: return null
+            val name = NativeKommons.systemProperty(PROPERTY_OS_NAME) ?: return null
             return matching(name)
         }
     }

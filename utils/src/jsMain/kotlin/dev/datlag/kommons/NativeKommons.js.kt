@@ -4,7 +4,7 @@ import kotlinx.coroutines.CancellationException as CoroutineCancelException
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.reflect.KClass
 
-actual object Kommons : Quote {
+actual object NativeKommons : Quote {
 
     actual inline fun <T> suspendCatching(block: () -> T): Result<T> = try {
         Result.success(block())
@@ -16,8 +16,15 @@ actual object Kommons : Quote {
         Result.failure(e)
     }
 
+    @OptIn(ExperimentalWasmJsInterop::class)
     actual infix fun <T : Any> KClass<T>.typeOf(base: KClass<*>): Boolean {
-        return this == base
+        return this == base || this.js == base.js || run {
+            val jsClass = this.js.asDynamic()
+            val baseClass = this.js.asDynamic()
+
+            val result = js("jsClass.prototype instanceof baseClass")
+            result.unsafeCast<JsBoolean>().toBoolean() || (result as? Boolean == true)
+        }
     }
 
     actual data object Platform {
@@ -28,11 +35,11 @@ actual object Kommons : Quote {
         actual val isApple: Boolean = isIOS || isTVOS || isWatchOS || isMacOSNative
         actual val isLinuxNative: Boolean = false
         actual val isWindowsNative: Boolean = false
-        actual val isAndroidNative: Boolean= false
-        actual val isJs: Boolean = false
+        actual val isAndroidNative: Boolean = false
+        actual val isJs: Boolean = true
         actual val isWasmJS: Boolean = false
         actual val isAndroidJVM: Boolean = false
-        actual val isWasmWASI: Boolean = true
+        actual val isWasmWASI: Boolean = false
         actual val isDesktopJVM: Boolean = false
         actual val isWeb: Boolean = isJs || isWasmJS
         actual val isNative: Boolean = isApple || isLinuxNative || isWindowsNative || isAndroidNative

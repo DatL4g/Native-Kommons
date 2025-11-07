@@ -4,7 +4,7 @@ import kotlinx.coroutines.CancellationException as CoroutineCancelException
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.reflect.KClass
 
-actual object Kommons : Quote {
+actual object NativeKommons : Quote {
 
     actual inline fun <T> suspendCatching(block: () -> T): Result<T> = try {
         Result.success(block())
@@ -16,6 +16,7 @@ actual object Kommons : Quote {
         Result.failure(e)
     }
 
+    @OptIn(ExperimentalWasmJsInterop::class)
     actual infix fun <T : Any> KClass<T>.typeOf(base: KClass<*>): Boolean {
         return this == base
     }
@@ -28,9 +29,9 @@ actual object Kommons : Quote {
         actual val isApple: Boolean = isIOS || isTVOS || isWatchOS || isMacOSNative
         actual val isLinuxNative: Boolean = false
         actual val isWindowsNative: Boolean = false
-        actual val isAndroidNative: Boolean= true
+        actual val isAndroidNative: Boolean = false
         actual val isJs: Boolean = false
-        actual val isWasmJS: Boolean = false
+        actual val isWasmJS: Boolean = true
         actual val isAndroidJVM: Boolean = false
         actual val isWasmWASI: Boolean = false
         actual val isDesktopJVM: Boolean = false

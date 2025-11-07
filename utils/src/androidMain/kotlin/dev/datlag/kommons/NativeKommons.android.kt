@@ -9,7 +9,7 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
-actual object Kommons : Quote {
+actual object NativeKommons : Quote {
 
     actual inline fun <T> suspendCatching(block: () -> T): Result<T> = try {
         Result.success(block())

@@ -4,7 +4,7 @@ import kotlinx.coroutines.CancellationException as CoroutineCancelException
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.reflect.KClass
 
-actual object Kommons : Quote {
+actual object NativeKommons : Quote {
 
     actual inline fun <T> suspendCatching(block: () -> T): Result<T> = try {
         Result.success(block())
@@ -23,7 +23,7 @@ actual object Kommons : Quote {
     actual data object Platform {
         actual val isIOS: Boolean = false
         actual val isTVOS: Boolean = false
-        actual val isWatchOS: Boolean = true
+        actual val isWatchOS: Boolean = false
         actual val isMacOSNative: Boolean = false
         actual val isApple: Boolean = isIOS || isTVOS || isWatchOS || isMacOSNative
         actual val isLinuxNative: Boolean = false
@@ -32,7 +32,7 @@ actual object Kommons : Quote {
         actual val isJs: Boolean = false
         actual val isWasmJS: Boolean = false
         actual val isAndroidJVM: Boolean = false
-        actual val isWasmWASI: Boolean = false
+        actual val isWasmWASI: Boolean = true
         actual val isDesktopJVM: Boolean = false
         actual val isWeb: Boolean = isJs || isWasmJS
         actual val isNative: Boolean = isApple || isLinuxNative || isWindowsNative || isAndroidNative

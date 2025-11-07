@@ -24,14 +24,14 @@ internal sealed interface OperatingSystem {
         } || this.names.contains(name.lowercase(Locale.ROOT))
     }
 
-    fun openUri(uri: String): Boolean {
+    fun openUri(uri: URI): Boolean {
         fun openByCommands(): Boolean {
             openArguments.forEach { open ->
                 Kommons.suspendCatching {
                     val command = arrayOfNulls<String>(open.size)
                     for (i in open.indices) {
                         if (open[i] == "$1") {
-                            command[i] = uri
+                            command[i] = uri.toString()
                         } else {
                             command[i] = open[i]
                         }
@@ -45,16 +45,7 @@ internal sealed interface OperatingSystem {
             return false
         }
 
-        val jwtSuccess = Kommons.suspendCatching {
-            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-                Desktop.getDesktop().browse(URI.create(uri))
-                true
-            } else {
-                false
-            }
-        }.getOrNull() ?: false
-
-        return jwtSuccess || openByCommands()
+        return browseUri(uri) || openByCommands()
     }
 
     data object MacOS : OperatingSystem {
@@ -92,6 +83,17 @@ internal sealed interface OperatingSystem {
 
     companion object {
         private const val PROPERTY_OS_NAME = "os.name"
+
+        internal fun browseUri(uri: URI): Boolean {
+            return Kommons.suspendCatching {
+                if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                    Desktop.getDesktop().browse(uri)
+                    true
+                } else {
+                    false
+                }
+            }.getOrNull() ?: false
+        }
 
         fun matching(name: String) : OperatingSystem? {
             return when {

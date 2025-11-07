@@ -1,5 +1,7 @@
 package dev.datlag.kommons
 
+import java.awt.Desktop
+import java.net.URI
 import kotlinx.coroutines.CancellationException as CoroutineCancelException
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -23,8 +25,20 @@ actual object Kommons {
         System.getenv(key).ifBlank { null }
     }.getOrNull()
 
+    fun openUri(uri: String): Boolean {
+        val os = Platform.os ?: return when {
+            Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE) -> {
+                Desktop.getDesktop().browse(URI.create(uri))
+                true
+            }
+            else -> false
+        }
+
+        return os.openUri(uri)
+    }
+
     actual data object Platform {
-        private val os by lazy(LazyThreadSafetyMode.NONE) {
+        internal val os by lazy(LazyThreadSafetyMode.NONE) {
             OperatingSystem.matching()
         }
 
@@ -46,8 +60,14 @@ actual object Kommons {
         actual val isAndroid: Boolean = isAndroidJVM || isAndroidNative
         actual val isWasm: Boolean = isWasmJS || isWasmWASI
         actual val isJVM: Boolean = isDesktopJVM || isAndroidJVM
-        actual val isLinux: Boolean = isLinuxNative || os?.isLinux ?: false
-        actual val isWindows: Boolean = isWindowsNative || os?.isWindows ?: false
-        actual val isMacOS: Boolean = isMacOSNative || os?.isMacOS ?: false
+        actual val isLinux: Boolean by lazy {
+            isLinuxNative || os?.isLinux ?: false
+        }
+        actual val isWindows: Boolean by lazy {
+            isWindowsNative || os?.isWindows ?: false
+        }
+        actual val isMacOS: Boolean by lazy {
+            isMacOSNative || os?.isMacOS ?: false
+        }
     }
 }

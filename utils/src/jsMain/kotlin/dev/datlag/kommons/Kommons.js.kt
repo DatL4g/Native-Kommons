@@ -2,8 +2,9 @@ package dev.datlag.kommons
 
 import kotlinx.coroutines.CancellationException as CoroutineCancelException
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.reflect.KClass
 
-actual object Kommons {
+actual object Kommons : Quote {
 
     actual inline fun <T> suspendCatching(block: () -> T): Result<T> = try {
         Result.success(block())
@@ -13,6 +14,17 @@ actual object Kommons {
         }
 
         Result.failure(e)
+    }
+
+    @OptIn(ExperimentalWasmJsInterop::class)
+    actual infix fun <T : Any> KClass<T>.typeOf(base: KClass<*>): Boolean {
+        return this == base || this.js == base.js || run {
+            val jsClass = this.js.asDynamic()
+            val baseClass = this.js.asDynamic()
+
+            val result = js("jsClass.prototype instanceof baseClass")
+            result.unsafeCast<JsBoolean>().toBoolean() || (result as? Boolean == true)
+        }
     }
 
     actual data object Platform {

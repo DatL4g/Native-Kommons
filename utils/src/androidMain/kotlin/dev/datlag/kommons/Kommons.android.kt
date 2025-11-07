@@ -6,8 +6,10 @@ import android.content.res.Configuration
 import android.os.Build
 import kotlinx.coroutines.CancellationException as CoroutineCancelException
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.reflect.KClass
+import kotlin.reflect.full.isSubclassOf
 
-actual object Kommons {
+actual object Kommons : Quote {
 
     actual inline fun <T> suspendCatching(block: () -> T): Result<T> = try {
         Result.success(block())
@@ -19,14 +21,23 @@ actual object Kommons {
         Result.failure(e)
     }
 
+    actual infix fun <T : Any> KClass<T>.typeOf(base: KClass<*>): Boolean {
+        return this == base || this.isSubclassOf(base)
+    }
+
+    @JvmStatic
     fun systemProperty(key: String): String? = suspendCatching {
         System.getProperty(key).ifBlank { null }
     }.getOrNull()
 
+
+    @JvmStatic
     fun systemEnv(key: String): String? = suspendCatching {
         System.getenv(key).ifBlank { null }
     }.getOrNull()
 
+
+    @JvmStatic
     fun isTelevision(packageManager: PackageManager): Boolean {
         val leanbackOnly = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK_ONLY)
@@ -39,22 +50,27 @@ actual object Kommons {
                 || packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
     }
 
+    @JvmStatic
     fun isTelevision(configuration: Configuration): Boolean {
         return (configuration.uiMode and Configuration.UI_MODE_TYPE_MASK) == Configuration.UI_MODE_TYPE_TELEVISION
     }
 
+    @JvmStatic
     fun isTelevision(context: Context): Boolean {
         return isTelevision(context.packageManager) || context.resources.configuration?.let(::isTelevision) ?: false
     }
 
+    @JvmStatic
     fun isWatch(packageManager: PackageManager): Boolean {
         return packageManager.hasSystemFeature(PackageManager.FEATURE_WATCH)
     }
 
+    @JvmStatic
     fun isWatch(configuration: Configuration): Boolean {
         return (configuration.uiMode and Configuration.UI_MODE_TYPE_MASK) == Configuration.UI_MODE_TYPE_WATCH
     }
 
+    @JvmStatic
     fun isWatch(context: Context): Boolean {
         return isWatch(context.packageManager) || context.resources.configuration?.let(::isWatch) ?: false
     }

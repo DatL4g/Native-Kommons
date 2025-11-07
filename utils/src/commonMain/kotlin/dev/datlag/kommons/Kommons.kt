@@ -1,9 +1,12 @@
 package dev.datlag.kommons
 
+import kotlin.reflect.KClass
 
-expect object Kommons {
+
+expect object Kommons : Quote {
 
     inline fun <T> suspendCatching(block: () -> T): Result<T>
+    infix fun <T : Any> KClass<T>.typeOf(base: KClass<*>): Boolean
 
     object Platform {
 

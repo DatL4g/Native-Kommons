@@ -6,8 +6,10 @@ import kotlinx.coroutines.CancellationException as CoroutineCancelException
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.io.path.Path
 import kotlin.io.path.exists
+import kotlin.reflect.KClass
+import kotlin.reflect.full.isSubclassOf
 
-actual object Kommons {
+actual object Kommons : Quote {
 
     actual inline fun <T> suspendCatching(block: () -> T): Result<T> = try {
         Result.success(block())
@@ -19,20 +21,28 @@ actual object Kommons {
         Result.failure(e)
     }
 
+    actual infix fun <T : Any> KClass<T>.typeOf(base: KClass<*>): Boolean {
+        return this == base || this.isSubclassOf(base)
+    }
+
+    @JvmStatic
     fun systemProperty(key: String): String? = suspendCatching {
         System.getProperty(key).ifBlank { null }
     }.getOrNull()
 
+    @JvmStatic
     fun systemEnv(key: String): String? = suspendCatching {
         System.getenv(key).ifBlank { null }
     }.getOrNull()
 
+    @JvmStatic
     fun openUri(uri: URI): Boolean {
         val os = Platform.os ?: return OperatingSystem.browseUri(uri)
 
         return os.openUri(uri)
     }
 
+    @JvmStatic
     fun openUri(uri: String): Boolean = openUri(URI.create(uri))
 
     actual data object Platform {
@@ -40,30 +50,71 @@ actual object Kommons {
             OperatingSystem.matching()
         }
 
+        @JvmField
         actual val isIOS: Boolean = false
+
+        @JvmField
         actual val isTVOS: Boolean = false
+
+        @JvmField
         actual val isWatchOS: Boolean = false
+
+        @JvmField
         actual val isMacOSNative: Boolean = false
+
+        @JvmField
         actual val isApple: Boolean = isIOS || isTVOS || isWatchOS || isMacOSNative
+
+        @JvmField
         actual val isLinuxNative: Boolean = false
+
+        @JvmField
         actual val isWindowsNative: Boolean = false
+
+        @JvmField
         actual val isAndroidNative: Boolean = false
+
+        @JvmField
         actual val isJs: Boolean = false
+
+        @JvmField
         actual val isWasmJS: Boolean = false
+
+        @JvmField
         actual val isAndroidJVM: Boolean = false
+
+        @JvmField
         actual val isWasmWASI: Boolean = false
+
+        @JvmField
         actual val isDesktopJVM: Boolean = true
+
+        @JvmField
         actual val isWeb: Boolean = isJs || isWasmJS
+
+        @JvmField
         actual val isNative: Boolean = isApple || isLinuxNative || isWindowsNative || isAndroidNative
+
+        @JvmField
         actual val isAndroid: Boolean = isAndroidJVM || isAndroidNative
+
+        @JvmField
         actual val isWasm: Boolean = isWasmJS || isWasmWASI
+
+        @JvmField
         actual val isJVM: Boolean = isDesktopJVM || isAndroidJVM
+
+        @JvmStatic
         actual val isLinux: Boolean by lazy {
             isLinuxNative || os?.isLinux ?: false
         }
+
+        @JvmStatic
         actual val isWindows: Boolean by lazy {
             isWindowsNative || os?.isWindows ?: false
         }
+
+        @JvmStatic
         actual val isMacOS: Boolean by lazy {
             isMacOSNative || os?.isMacOS ?: false
         }
@@ -80,11 +131,13 @@ actual object Kommons {
         private const val PROPERTY_TEMP_DIR = "java.io.tmpdir"
         private const val ENV_TEMP_DIR = "TEMP"
 
+        @JvmStatic
         val Home: Path? by lazy {
             resolveDirectory(systemProperty(PROPERTY_USER_HOME))
                 ?: resolveDirectory(systemEnv(ENV_USER_HOME))
         }
 
+        @JvmStatic
         val JavaHome: Path? by lazy {
             resolveDirectory(systemProperty(PROPERTY_JAVA_HOME))
                 ?: resolveDirectory(systemEnv(ENV_JAVA_HOME))
@@ -93,6 +146,7 @@ actual object Kommons {
                 ?: resolveDirectory(PATH_JAVA_FALLBACK_RUNTIME)
         }
 
+        @JvmStatic
         val Temp: Path? by lazy {
             resolveDirectory(systemProperty(PROPERTY_TEMP_DIR))
                 ?: resolveDirectory(systemEnv(ENV_TEMP_DIR))

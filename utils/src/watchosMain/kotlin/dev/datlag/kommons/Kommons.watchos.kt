@@ -2,8 +2,9 @@ package dev.datlag.kommons
 
 import kotlinx.coroutines.CancellationException as CoroutineCancelException
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.reflect.KClass
 
-actual object Kommons {
+actual object Kommons : Quote {
 
     actual inline fun <T> suspendCatching(block: () -> T): Result<T> = try {
         Result.success(block())
@@ -13,6 +14,10 @@ actual object Kommons {
         }
 
         Result.failure(e)
+    }
+
+    actual infix fun <T : Any> KClass<T>.typeOf(base: KClass<*>): Boolean {
+        return this == base
     }
 
     actual data object Platform {

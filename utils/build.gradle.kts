@@ -183,6 +183,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.coroutines)
+            implementation(libs.reflection)
         }
     }
 }

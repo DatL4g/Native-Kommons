@@ -1,5 +1,7 @@
 TODO
 
+site
+
 sample/sekret
 sample/resources/*
 !sample/resources/.gitkeep

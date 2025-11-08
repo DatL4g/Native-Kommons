@@ -67,6 +67,7 @@ markdown_extensions:
 # Plugins
 plugins:
   - tags
+  - offline
 
 # Navigation
 nav:
@@ -105,6 +106,8 @@ theme:
     - navigation.instant
     - navigation.instant.progress
     - navigation.top
+    - navigation.sections
+    - navigation.indexes
     - content.tabs.link
   icon:
     tag:

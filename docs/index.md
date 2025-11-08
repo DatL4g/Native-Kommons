@@ -6,7 +6,6 @@
 Making low-level, native programming feel as simple and common as high-level Kotlin.
 
 [Get Access (Sponsor-Only)](sponsorship.md){ .md-button .md-button--primary }
-[Browse All Modules](#libraries){ .md-button }
 
 ## Introduction
 

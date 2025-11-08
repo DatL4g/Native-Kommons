@@ -67,7 +67,6 @@ markdown_extensions:
 # Plugins
 plugins:
   - tags
-  - offline
 
 # Navigation
 nav:

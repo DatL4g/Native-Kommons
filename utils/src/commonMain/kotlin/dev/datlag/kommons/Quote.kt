@@ -17,14 +17,12 @@ interface Quote {
     val CharSequence.singleQuoted
         get() = quote(SINGLE_QUOTATION)
 
-    @JvmOverloads
     fun Char.quote(start: Char = DOUBLE_QUOTATION, end: Char = DOUBLE_QUOTATION) = buildString {
         append(start)
         append(this@quote)
         append(end)
     }
 
-    @JvmOverloads
     fun CharSequence.quote(start: Char = DOUBLE_QUOTATION, end: Char = DOUBLE_QUOTATION) = buildString {
         append(start)
         for (char in this@quote) {
@@ -41,11 +39,7 @@ interface Quote {
     }
 
     companion object {
-
-        @JvmStatic
         const val DOUBLE_QUOTATION = '"'
-
-        @JvmStatic
         const val SINGLE_QUOTATION = '\''
     }
 }

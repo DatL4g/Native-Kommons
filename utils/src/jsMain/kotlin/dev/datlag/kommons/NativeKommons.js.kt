@@ -20,10 +20,9 @@ actual object NativeKommons : Quote {
     actual infix fun <T : Any> KClass<T>.typeOf(base: KClass<*>): Boolean {
         return this == base || this.js == base.js || run {
             val jsClass = this.js.asDynamic()
-            val baseClass = this.js.asDynamic()
+            val baseClass = base.js.asDynamic()
 
-            val result = js("jsClass.prototype instanceof baseClass")
-            result.unsafeCast<JsBoolean>().toBoolean() || (result as? Boolean == true)
+            js("baseClass.prototype.isPrototypeOf(jsClass.prototype)")
         }
     }
 
